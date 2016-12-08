@@ -1,4 +1,4 @@
-**T**orque **a**nd **D**rag **I**so**g**eometric **A**nalysis
+**T**orque **a**nd **D**rag [with] **I**so**g**eometric **A**nalysis
 
 More details to come...
 
