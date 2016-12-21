@@ -11,10 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+#include <Teuchos_GlobalMPISession.hpp>
+#include <Teuchos_UnitTestRepository.hpp>
 
-#include "tadiga_IGES_geometry.h"
-
-tadiga::IGESGeometry::IGESGeometry(
-    const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
-    const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters)
-    : kComm_(kComm){};
+int main(int argc, char* argv[]) {
+    Teuchos::GlobalMPISession mpiSession(&argc, &argv);
+    return Teuchos::UnitTestRepository::runUnitTestsFromMain(argc, argv);
+}

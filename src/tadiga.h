@@ -11,10 +11,25 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+#ifndef TADIGA_H
+#define TADIGA_H
 
-#include "tadiga_IGES_geometry.h"
+#include <Teuchos_Comm.hpp>
+#include <Teuchos_ParameterList.hpp>
 
-tadiga::IGESGeometry::IGESGeometry(
-    const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
-    const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters)
-    : kComm_(kComm){};
+#include "tadiga_geometry.h"
+
+namespace tadiga {
+
+class Tadiga {
+   public:
+    Tadiga(const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
+           Teuchos::RCP<Teuchos::ParameterList> parameters,
+           Teuchos::RCP<tadiga::Geometry> tadiga_geometry);
+
+   private:
+    Teuchos::RCP<Teuchos::ParameterList> parameters_;
+};
+}
+
+#endif

@@ -5,7 +5,7 @@
 Cmake_minimum_required (VERSION 2.6)
 
 enable_testing ()
-project(Tadiga)
+project(TaDIgA)
 
 # MPI configuration
 # use the FindMPI module to find a version of MPI

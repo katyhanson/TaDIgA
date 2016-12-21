@@ -1,37 +1,40 @@
 #
-# Main executable for Tadiga
+# Main executable for TaDIgA
 #
 
-# Glob header files in subdirectories
-file (GLOB srcHEADERS 
-  "*.h"
-)
-
 set(Tadiga_HEADERS
-    ${srcHEADERS}
-)
-
-# Glob source files in subdirectories
-file (GLOB srcSOURCES 
-  "*.cc"
+    tadiga.h
+    tadiga_IGES_geometry.h
+    tadiga_factory.h
+    tadiga_geometry.h
+    tadiga_geometry_factory.h
 )
 
 set(Tadiga_SOURCES
-    ${srcSOURCES}
+    tadiga.cc
+    tadiga_IGES_geometry.cc
+    tadiga_factory.cc
+    tadiga_geometry.cc
+    tadiga_geometry_factory.cc
 )
 
+add_library(tadigaLib ${Tadiga_SOURCES})
+set(Tadiga_LIBRARY tadigaLib)
 
 set(Tadiga_LINK_LIBRARIES
+    ${Tadiga_LIBRARY}
     ${Trilinos_LIBRARIES}
     ${REQUIRED_LIBS}
 )
 
-add_executable(Tadiga ${Tadiga_SOURCES})
-target_link_libraries(Tadiga ${Tadiga_LINK_LIBRARIES})
+add_executable(tadiga tadiga_main.cc)
+target_link_libraries(tadiga ${Tadiga_LINK_LIBRARIES})
 
 #
 # Install target for Tadiga main executable
 #
-install(TARGETS Tadiga 
+install(TARGETS tadiga 
     RUNTIME DESTINATION bin
 )
+
+add_subdirectory(test)

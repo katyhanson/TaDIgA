@@ -14,6 +14,7 @@
 #ifndef TADIGA_GEOMETRYFACTORY_HPP
 #define TADIGA_GEOMETRYFACTORY_HPP
 
+#include <Teuchos_Comm.hpp>
 #include <Teuchos_ParameterList.hpp>
 #include <Teuchos_RCP.hpp>
 
@@ -22,27 +23,26 @@
 namespace tadiga {
 
 class GeometryFactory {
- public:
-  //! Default constructor
-  GeometryFactory(
-      const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters);
+   public:
+    //! Default constructor
+    GeometryFactory(
+        const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters);
 
-  //! Destructor
-  virtual ~GeometryFactory() {}
+    virtual ~GeometryFactory(){};
 
-  virtual Teuchos::RCP<Geometry> create(
-      const Teuchos::RCP<const Teuchos::Comm<int>>& kComm);
+    virtual Teuchos::RCP<Geometry> create(
+        const Teuchos::RCP<const Teuchos::Comm<int>>& kComm);
 
- private:
-  //! Private to prohibit copying
-  GeometryFactory(const GeometryFactory&);
+   private:
+    //! Private to prohibit copying
+    GeometryFactory(const GeometryFactory&);
 
-  //! Private to prohibit copying
-  GeometryFactory& operator=(const GeometryFactory&);
+    //! Private to prohibit copying
+    GeometryFactory& operator=(const GeometryFactory&);
 
- protected:
-  //! Parameter list
-  Teuchos::RCP<Teuchos::ParameterList> geometry_parameters;
+   protected:
+    //! Parameter list
+    const Teuchos::RCP<Teuchos::ParameterList> kGeometryParameters_;
 };
 }
 

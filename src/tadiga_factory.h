@@ -18,38 +18,50 @@
 #include <Teuchos_RCP.hpp>
 
 #include "tadiga.h"
+#include "tadiga_geometry.h"
 
 namespace tadiga {
 
+class TadigaParser {
+   public:
+    TadigaParser();
+
+    static Teuchos::RCP<Teuchos::ParameterList> parse(
+        const std::string kInputFile);
+
+   private:
+    // Private function to set default problem parameter values
+    static void SetTadigaParameterDefaults(
+        Teuchos::Ptr<Teuchos::ParameterList> tadiga_parameters);
+
+    //! Private copy constructor to prohibit copying.
+    TadigaParser(const TadigaParser&);
+
+    //! Private assignment operator to prohibit copying.
+    TadigaParser& operator=(const TadigaParser&);
+};
+
 class TadigaFactory {
- public:
-  //! Default constructor.
-  TadigaFactory();
+   public:
+    TadigaFactory();
 
-  //! Destructor
-  virtual ~TadigaFactory() {}
+    virtual ~TadigaFactory(){};
 
-  virtual Teuchos::RCP<tadiga::Tadiga> tadiga::TadigaFactory::create(
-      const std::string input_file,
-      const Teuchos::RCP<const Teuchos::Comm<int>>& comm,
-      Teuchos::RCP<Geometry> input_tadiga_geometry);
+    virtual Teuchos::RCP<tadiga::Tadiga> create(
+        const std::string kInputFile,
+        const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
+        Teuchos::RCP<tadiga::Geometry> tadiga_geometry);
 
-  virtual Teuchos::RCP<tadiga::Tadiga> tadiga::TadigaFactory::create(
-      const std::string input_file,
-      const Teuchos::RCP<const Teuchos::Comm<int>>& comm);
+    virtual Teuchos::RCP<tadiga::Tadiga> create(
+        const std::string kInputFile,
+        const Teuchos::RCP<const Teuchos::Comm<int>>& kComm);
 
- private:
-  //! Private function to set default problem parameter values in lieu of
-  void SetTadigaParamDefaults(
-      Teuchos::Ptr<Teuchos::ParameterList> tadiga_parameters);
+   private:
+    //! Private copy constructor to prohibit copying.
+    TadigaFactory(const TadigaFactory&);
 
-  //! Private copy constructor to prohibit copying.
-  TadigaFactory(const TadigaFactory&);
-
-  //! Private assignment operator to prohibit copying.
-  TadigaFactory& operator=(const TadigaFactory&);
-
- protected:
+    //! Private assignment operator to prohibit copying.
+    TadigaFactory& operator=(const TadigaFactory&);
 };
 }
 #endif  // TADIGA_FACTORY_HPP

@@ -14,6 +14,9 @@
 #ifndef TADIGA_IGES_GEOMETRY_HPP
 #define TADIGA_IGES_GEOMETRY_HPP
 
+#include <Teuchos_Comm.hpp>
+#include <Teuchos_ParameterList.hpp>
+
 #include "tadiga_geometry.h"
 
 namespace tadiga {
@@ -21,24 +24,21 @@ namespace tadiga {
 //! Geometry class that reads an IGES file
 class IGESGeometry : public tadiga::Geometry {
    public:
-    //! Constructor
+    // Constructor
     IGESGeometry(
-        const Teuchos::RCP<const Epetra_Comm>& kComm,
+        const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
         const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters);
 
-    //! Destructor
-    virtual ~IGESGeometry();
-
    private:
-    //! Private to prohibit copying
+    // Private to prohibit copying
     IGESGeometry(const IGESGeometry&);
 
-    //! Private to prohibit copying
+    // Private to prohibit copying
     IGESGeometry& operator=(const IGESGeometry&);
 
    protected:
-    //! Epetra communicator
-    Teuchos::RCP<const Teuchos::Comm<int>>& kComm;
+    //  Communicator
+    const Teuchos::RCP<const Teuchos::Comm<int>>& kComm_;
 };
 }
 

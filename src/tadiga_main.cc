@@ -14,43 +14,42 @@
 
 #include <iostream>
 
-#include <Teuchos_GlobalMPISession.hpp>
-#include <Tpetra_DefaultPlatform.hpp>
-#include <Tpetra_Version.hpp>
+#include "Teuchos_GlobalMPISession.hpp"
+#include "Tpetra_DefaultPlatform.hpp"
 
-//#include "tadiga_factory.hpp"
+#include "tadiga_factory.h"
 
 int main(int argc, char* argv[]) {
-  // Initialize MPI
-  Teuchos::GlobalMPISession mpi_session(&argc, &argv, NULL);
+    // Initialize MPI
+    Teuchos::GlobalMPISession mpi_session(&argc, &argv, NULL);
 
-  Teuchos::RCP<const Teuchos::Comm<int>> comm =
-      Tpetra::DefaultPlatform::getDefaultPlatform().getComm();
+    auto kComm = Tpetra::DefaultPlatform::getDefaultPlatform().getComm();
 
-  const int rank = comm->getRank();
-  const int number_of_processors = comm->getSize();
+    const auto kRank = kComm->getRank();
+    const auto kNumberOfProcessors = kComm->getSize();
 
-  // Banner
-  if (rank == 0) {
-    std::cout << "\n-- TaDIgA" << std::endl;
-    if (number_of_processors > 1)
-      std::cout << "MPI initialized on " << number_of_processors
-                << " processors.\n"
-                << std::endl;
-  }
+    // Banner
+    if (kRank == 0) {
+        std::cout << "\n-- TaDIgA" << std::endl;
+        if (kNumberOfProcessors > 1)
+            std::cout << "MPI initialized on " << kNumberOfProcessors
+                      << " processors.\n"
+                      << std::endl;
+    }
 
-  if (argc != 2) {
-    if (rank == 0) std::cout << "Usage:  tadiga <input.yaml>\n" << std::endl;
-    return 1;
-  }
+    if (argc != 2) {
+        if (kRank == 0)
+            std::cout << "Usage:  tadiga <input.yaml>\n" << std::endl;
+        return 1;
+    }
 
-  // std::string yaml_file_name(argv[1]);
+    // Get filename string from command line
+    const auto kYamlFileName(argv[1]);
 
-  // Create factory object to produce main tadiga object
-  // TADIGA::TadigaFactory tadigaFactory;
-  // Create tadiga object
-  // Teuchos::RCP<TADIGA::Tadiga> tadiga =
-  // tadigaFactory.create(yaml_file_name, tadigaComm);
+    // Create factory object to produce main tadiga object
+    tadiga::TadigaFactory tadiga_factory;
+    // Create tadiga object
+    auto tadiga = tadiga_factory.create(kYamlFileName, kComm);
 
-  return 0;
+    return 0;
 }

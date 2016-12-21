@@ -14,20 +14,12 @@
 #ifndef TADIGA_GEOMETRY_HPP
 #define TADIGA_GEOMETRY_HPP
 
-#include <Teuchos_ParameterList.hpp>
-#include <Teuchos_RCP.hpp>
-
 namespace tadiga {
 
 class Geometry {
    public:
-    //! Constructor
-    Geometry() : {}
+    Geometry(){};
 
-    //! Destructor
-    virtual ~Geometry() {}
-
-   protected:
    private:
     //! Private to prohibit copying.
     Geometry(const Geometry &);

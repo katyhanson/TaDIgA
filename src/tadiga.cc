@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "tadiga_IGES_geometry.h"
+#include "tadiga.h"
 
-tadiga::IGESGeometry::IGESGeometry(
-    const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
-    const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters)
-    : kComm_(kComm){};
+tadiga::Tadiga::Tadiga(const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
+                       Teuchos::RCP<Teuchos::ParameterList> parameters,
+                       Teuchos::RCP<tadiga::Geometry> tadiga_geometry){};

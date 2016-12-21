@@ -13,40 +13,42 @@
 // limitations under the License.
 #include <Teuchos_Assert.hpp>
 
+#include "tadiga_IGES_geometry.h"
 #include "tadiga_geometry_factory.h"
 
 tadiga::GeometryFactory::GeometryFactory(
     const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters)
-    : geometry_parameters(kGeometryParameters) {
-  // check to see if a geometry type has been given
-  if (!kGeometryParameters->isParameter("Type")) {
-    TEUCHOS_TEST_FOR_EXCEPTION(
-        true, Teuchos::Exceptions::InvalidParameter,
-        "Geometry type not specified, \"IGES\" is the only currently available 
-        option.");
-  }
+    : kGeometryParameters_(kGeometryParameters) {
+    // check to see if a geometry type has been given
+    if (!kGeometryParameters_->isParameter("Type")) {
+        TEUCHOS_TEST_FOR_EXCEPTION(true, Teuchos::Exceptions::InvalidParameter,
+                                   "Geometry type not specified, \"IGES\" is "
+                                   "the only currently available"
+                                   "option.");
+    }
 }
 
 Teuchos::RCP<tadiga::Geometry> tadiga::GeometryFactory::create(
     const Teuchos::RCP<const Teuchos::Comm<int>>& kComm) {
-  Teuchos::RCP<tadiga::Geometry> geometry;
+    Teuchos::RCP<tadiga::Geometry> geometry;
 
-  std::string type = kGeometryParameters->get<string>("Type");
+    auto type = kGeometryParameters_->get<std::string>("Type");
 
-  if (type == "IGES") {
-    geometry =
-        Teuchos::rcp(new tadiga::IGESGeometry(kComm, kGeometryParameters));
-  }
-  // TODO(johntfosterjr@gmail.com): Add STEP file functionality
-  // else if(type == "STEP"){
-  // discretization = Teuchos::rcp(new tadiga::STEPGeometry(epetra_comm,
-  // discParams));
-  //}
-  else {
-    TEUCHOS_TEST_FOR_EXCEPTION(true, Teuchos::Exceptions::InvalidParameter,
-                               "**** Invalid geometry type.  Valid types are "
-                               "\"IGES\".\n");
-  }
+    if (type == "IGES") {
+        geometry =
+            Teuchos::rcp(new tadiga::IGESGeometry(kComm, kGeometryParameters_));
+    }
+    // TODO(johntfosterjr@gmail.com): Add STEP file functionality
+    // else if(type == "STEP"){
+    // discretization = Teuchos::rcp(new tadiga::STEPGeometry(epetra_comm,
+    // discParams));
+    //}
+    else {
+        TEUCHOS_TEST_FOR_EXCEPTION(
+            true, Teuchos::Exceptions::InvalidParameter,
+            "**** Invalid geometry type.  Valid types are "
+            "\"IGES\".\n");
+    }
 
-  return geometry;
+    return geometry;
 }

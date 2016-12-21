@@ -18,51 +18,62 @@
 #include <Teuchos_YamlParameterListCoreHelpers.hpp>
 #include <Teuchos_YamlParser_decl.hpp>
 
-#include "aprepro.h"
+#include <aprepro.h>
 
+#include "tadiga.h"
 #include "tadiga_factory.h"
 
-// *****************************************************************
+// Input file parser
+tadiga::TadigaParser::TadigaParser() {}
 
+Teuchos::RCP<Teuchos::ParameterList> tadiga::TadigaParser::parse(
+    const std::string kInputFile) {
+    // Set application parameters to default values
+    auto tadiga_parameters = Teuchos::rcp(new Teuchos::ParameterList());
+
+    SetTadigaParameterDefaults(tadiga_parameters.ptr());
+
+    // Create aprepro instance
+    SEAMS::Aprepro aprepro;
+    std::ifstream input_file_stream(kInputFile.c_str());
+
+    // get results from aprepro's parsing
+    aprepro.parse_stream(input_file_stream,
+                         kInputFile);  // TODO(johntfosterjr@gmail.com): Check
+                                       // return value (bool).
+
+    // Update parameters with data from yaml string
+    Teuchos::Ptr<Teuchos::ParameterList> tadiga_parameters_ptr(
+        tadiga_parameters.get());
+
+    Teuchos::updateParametersFromYamlCString(
+        (aprepro.parsing_results().str()).c_str(), tadiga_parameters_ptr);
+
+    return tadiga_parameters;
+}
+
+void tadiga::TadigaParser::SetTadigaParameterDefaults(
+    Teuchos::Ptr<Teuchos::ParameterList> tadiga_parameters) {
+    tadiga_parameters->set("Verbose", false);
+}
+
+// Factory Method to create Tadiga objects
 tadiga::TadigaFactory::TadigaFactory() {}
 
 Teuchos::RCP<tadiga::Tadiga> tadiga::TadigaFactory::create(
-    const std::string input_file,
-    const Teuchos::RCP<const Teuchos::Comm<int>>& comm,
-    Teuchos::RCP<Geometry> input_tadiga_geometry) {
-  // Set application parameters to default values
-  Teuchos::RCP<Teuchos::ParameterList> tadiga_parameters =
-      Teuchos::rcp(new Teuchos::ParameterList());
+    const std::string kInputFile,
+    const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
+    Teuchos::RCP<tadiga::Geometry> tadiga_geometry) {
+    const auto tadiga_parameters = tadiga::TadigaParser::parse(kInputFile);
 
-  SetTadigaParameterDefaults(tadiga_parameters.ptr());
-
-  SEAMS::Aprepro aprepro;
-  std::ifstream input_file_stream(input_file.c_str());
-
-  // get results from aprepro's parsing
-  aprepro.parse_stream(
-      input_file_stream,
-      input_file);  // TODO(johntfosterjr@gmail.com): Check return value (bool).
-
-  // Update parameters with data from yaml string
-  Teuchos::Ptr<Teuchos::ParameterList> tadiga_parameters_ptr(
-      tadiga_parameters.get());
-  Teuchos::updateParametersFromYamlCString(
-      (aprepro.parsing_results().str()).c_str(), tadiga_parameters_ptr);
-
-  // Create new Tadiga object
-  return rcp(
-      new tadiga::Tadiga(comm, tadiga_parameters, input_tadiga_geometry));
+    // Create new Tadiga object
+    return Teuchos::rcp(
+        new tadiga::Tadiga(kComm, tadiga_parameters, tadiga_geometry));
 }
 
 Teuchos::RCP<tadiga::Tadiga> tadiga::TadigaFactory::create(
-    const std::string input_file,
-    const Teuchos::RCP<const Teuchos::Comm<int>>& comm) {
-  Teuchos::RCP<Geometry> null_geometry;
-  return create(input_file, comm, null_geometry);
-}
-
-void tadiga::TadigaFactory::SetTadigaParameterDefaults(
-    Teuchos::Ptr<Teuchos::ParameterList> tadiga_parameters) {
-  tadiga_parameters->set("Verbose", false);
+    const std::string kInputFile,
+    const Teuchos::RCP<const Teuchos::Comm<int>>& kComm) {
+    Teuchos::RCP<tadiga::Geometry> null_geometry;
+    return create(kInputFile, kComm, null_geometry);
 }
