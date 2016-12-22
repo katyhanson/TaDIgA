@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <Teuchos_ParameterList.hpp>
-#include <Teuchos_RCP.hpp>
-#include <Teuchos_XMLParameterListHelpers.hpp>
-#include <Teuchos_YamlParameterListCoreHelpers.hpp>
-#include <Teuchos_YamlParser_decl.hpp>
+#include "Teuchos_ParameterList.hpp"
+#include "Teuchos_RCP.hpp"
+#include "Teuchos_XMLParameterListHelpers.hpp"
+#include "Teuchos_YamlParameterListCoreHelpers.hpp"
+#include "Teuchos_YamlParser_decl.hpp"
 
-#include <aprepro.h>
+#include "aprepro.h"
 
 #include "tadiga.h"
 #include "tadiga_factory.h"

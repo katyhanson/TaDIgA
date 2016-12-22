@@ -34,10 +34,10 @@ class TadigaParser {
     static void SetTadigaParameterDefaults(
         Teuchos::Ptr<Teuchos::ParameterList> tadiga_parameters);
 
-    //! Private copy constructor to prohibit copying.
+    // Private copy constructor to prohibit copying.
     TadigaParser(const TadigaParser&);
 
-    //! Private assignment operator to prohibit copying.
+    // Private assignment operator to prohibit copying.
     TadigaParser& operator=(const TadigaParser&);
 };
 
@@ -57,10 +57,10 @@ class TadigaFactory {
         const Teuchos::RCP<const Teuchos::Comm<int>>& kComm);
 
    private:
-    //! Private copy constructor to prohibit copying.
+    // Private copy constructor to prohibit copying.
     TadigaFactory(const TadigaFactory&);
 
-    //! Private assignment operator to prohibit copying.
+    // Private assignment operator to prohibit copying.
     TadigaFactory& operator=(const TadigaFactory&);
 };
 }

@@ -18,22 +18,42 @@
 #include "Teuchos_UnitTestHarness.hpp"
 #include "Tpetra_DefaultPlatform.hpp"
 
-#include "tadiga.h"
+#include "Teuchos_XMLParameterListCoreHelpers.hpp"
+#include "Teuchos_YamlParser_decl.hpp"
+
 #include "tadiga_factory.h"
 
 namespace tadiga_test {
 
-struct TestSetup {
-    // Get communicator from test runner main()
-    Teuchos::RCP<const Teuchos::Comm<int>> kComm =
-        Tpetra::DefaultPlatform::getDefaultPlatform().getComm();
+class TestSetup {
+   public:
+    TestSetup();
+
+    Teuchos::RCP<const Teuchos::Comm<int>> kComm;
+
+    Teuchos::RCP<Teuchos::ParameterList> parameters;
+
+    std::string filename;
+};
+
+TestSetup::TestSetup() {
+    kComm = Tpetra::DefaultPlatform::getDefaultPlatform().getComm();
 
     // Create temporary file
-    std::FILE* temp_file = std::tmpfile();
+    // std::FILE* temp_file = std::tmpfile();
 
     // Get file name
-    const std::string filename = std::to_string(fileno(temp_file));
-};
+    // const std::string filename = std::to_string(fileno(temp_file));
+
+    // Create parameter list
+    parameters = Teuchos::rcp(new Teuchos::ParameterList());
+
+    parameters->set("Verbose", true);
+
+    filename = "/Users/john/Desktop/write_test.yaml";
+
+    Teuchos::YAMLParameterList::writeYamlFile(filename, parameters);
+}
 
 TEUCHOS_UNIT_TEST(Parser, Default) {
     const auto test_fixture = Teuchos::rcp(new TestSetup());
@@ -44,7 +64,7 @@ TEUCHOS_UNIT_TEST(Parser, Default) {
     // Retrieve
     const bool default_verbose_value = parameters->get<bool>("Verbose");
 
-    TEST_EQUALITY(default_verbose_value, false)
+    TEST_EQUALITY(default_verbose_value, true)
 }
 
 TEUCHOS_UNIT_TEST(Parser, File) {
@@ -64,7 +84,7 @@ TEUCHOS_UNIT_TEST(Parser, File) {
     // const auto parameters =
     // tadiga::TadigaParser::parse(test_fixture->filename);
     const auto parameters =
-        tadiga::TadigaParser::parse("/Users/john/Desktop/test.yaml");
+        tadiga::TadigaParser::parse("/Users/john/Desktop/write_test.yaml");
 
     // Retrieve
     const bool default_verbose_value = parameters->get<bool>("Verbose");
