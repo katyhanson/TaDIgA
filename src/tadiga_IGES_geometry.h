@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef TADIGA_IGES_GEOMETRY_HPP
-#define TADIGA_IGES_GEOMETRY_HPP
+#ifndef TADIGA_IGES_GEOMETRY_H
+#define TADIGA_IGES_GEOMETRY_H
 
 #include <Teuchos_Comm.hpp>
 #include <Teuchos_ParameterList.hpp>
@@ -22,19 +22,19 @@
 namespace tadiga {
 
 //! Geometry class that reads an IGES file
-class IGESGeometry : public tadiga::Geometry {
+class IgesGeometry : public tadiga::Geometry {
    public:
     // Constructor
-    IGESGeometry(
+    IgesGeometry(
         const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
         const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters);
 
    private:
     // Private to prohibit copying
-    IGESGeometry(const IGESGeometry&);
+    IgesGeometry(const IgesGeometry&);
 
     // Private to prohibit copying
-    IGESGeometry& operator=(const IGESGeometry&);
+    IgesGeometry& operator=(const IgesGeometry&);
 
    protected:
     //  Communicator
@@ -42,4 +42,4 @@ class IGESGeometry : public tadiga::Geometry {
 };
 }
 
-#endif  // TADIGA_IGES_GEOMETRY_HPP
+#endif  // TADIGA_IGES_GEOMETRY_H

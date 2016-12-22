@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef TADIGA_GEOMETRY_HPP
-#define TADIGA_GEOMETRY_HPP
+#ifndef TADIGA_GEOMETRY_H
+#define TADIGA_GEOMETRY_H
 
 namespace tadiga {
 
@@ -29,4 +29,4 @@ class Geometry {
 };
 }
 
-#endif  // TADIGA_GEOMETRY_HPP
+#endif  // TADIGA_GEOMETRY_H

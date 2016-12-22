@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef TADIGA_GEOMETRYFACTORY_HPP
-#define TADIGA_GEOMETRYFACTORY_HPP
+#ifndef TADIGA_GEOMETRYFACTORY_H
+#define TADIGA_GEOMETRYFACTORY_H
 
 #include <Teuchos_Comm.hpp>
 #include <Teuchos_ParameterList.hpp>
@@ -46,4 +46,4 @@ class GeometryFactory {
 };
 }
 
-#endif  // TADIGA_GEOMETRYFACTORY_HPP
+#endif  // TADIGA_GEOMETRYFACTORY_H

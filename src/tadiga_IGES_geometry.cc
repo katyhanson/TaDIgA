@@ -14,7 +14,7 @@
 
 #include "tadiga_IGES_geometry.h"
 
-tadiga::IGESGeometry::IGESGeometry(
+tadiga::IgesGeometry::IgesGeometry(
     const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
     const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters)
     : kComm_(kComm){};

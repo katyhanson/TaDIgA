@@ -6,6 +6,7 @@ set(Tadiga_HEADERS
     tadiga.h
     tadiga_IGES_geometry.h
     tadiga_factory.h
+    tadiga_parser.h
     tadiga_geometry.h
     tadiga_geometry_factory.h
 )
@@ -14,6 +15,7 @@ set(Tadiga_SOURCES
     tadiga.cc
     tadiga_IGES_geometry.cc
     tadiga_factory.cc
+    tadiga_parser.cc
     tadiga_geometry.cc
     tadiga_geometry_factory.cc
 )

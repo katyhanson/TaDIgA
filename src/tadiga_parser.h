@@ -11,38 +11,31 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef TADIGA_FACTORY_H
-#define TADIGA_FACTORY_H
+#ifndef TADIGA_PARSER_H
+#define TADIGA_PARSER_H
 
 #include <Teuchos_ParameterList.hpp>
 #include <Teuchos_RCP.hpp>
 
-#include "tadiga.h"
-#include "tadiga_geometry.h"
-
 namespace tadiga {
 
-class TadigaFactory {
+class TadigaParser {
    public:
-    TadigaFactory() {}
+    TadigaParser() {}
 
-    virtual ~TadigaFactory(){};
-
-    virtual Teuchos::RCP<tadiga::Tadiga> create(
-        const std::string kInputFile,
-        const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
-        Teuchos::RCP<tadiga::Geometry> tadiga_geometry);
-
-    virtual Teuchos::RCP<tadiga::Tadiga> create(
-        const std::string kInputFile,
-        const Teuchos::RCP<const Teuchos::Comm<int>>& kComm);
+    static Teuchos::RCP<Teuchos::ParameterList> parse(
+        const std::string kInputFile);
 
    private:
+    // Private function to set default problem parameter values
+    static void SetTadigaParameterDefaults(
+        Teuchos::Ptr<Teuchos::ParameterList> tadiga_parameters);
+
     // Private copy constructor to prohibit copying.
-    TadigaFactory(const TadigaFactory&);
+    TadigaParser(const TadigaParser&);
 
     // Private assignment operator to prohibit copying.
-    TadigaFactory& operator=(const TadigaFactory&);
+    TadigaParser& operator=(const TadigaParser&);
 };
 }
-#endif  // TADIGA_FACTORY_H
+#endif  // TADIGA_PARSER_H

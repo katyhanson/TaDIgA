@@ -36,7 +36,7 @@ Teuchos::RCP<tadiga::Geometry> tadiga::GeometryFactory::create(
 
     if (type == "IGES") {
         geometry =
-            Teuchos::rcp(new tadiga::IGESGeometry(kComm, kGeometryParameters_));
+            Teuchos::rcp(new tadiga::IgesGeometry(kComm, kGeometryParameters_));
     }
     // TODO(johntfosterjr@gmail.com): Add STEP file functionality
     // else if(type == "STEP"){
