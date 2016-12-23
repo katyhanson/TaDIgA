@@ -58,7 +58,7 @@ RUN rm -rf trilinos
 
 VOLUME /output
 WORKDIR /output
-ENV PATH /usr/local/tadiga/bin:$PATH
+ENV PATH /usr/local/trilinos/bin:$PATH
 
 RUN mkdir /var/run/sshd
 EXPOSE 22
