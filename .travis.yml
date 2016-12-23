@@ -13,7 +13,7 @@ script:
 
 after_success:
   - docker run johntfoster/tadiga /bin/sh -c "rm -rf /tadiga"
-  - docker commit (docker ps -a | awk '/tadiga/{print $1}') johntfoster/tadiga
+  - docker commit `docker ps -a | awk '/tadiga/{print $1}'` johntfoster/tadiga
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
     docker push johntfoster/tadiga;
