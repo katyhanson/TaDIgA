@@ -1,10 +1,6 @@
 **T**orque **a**nd **D**rag [with] **I**so**g**eometric **A**nalysis
 
-[![Build Status](https://travis-ci.org/johntfoster/TaDIgA.svg?branch=master)](https://travis-ci.org/johntfoster/TaDIgA)
-<a href="https://scan.coverity.com/projects/johntfoster-tadiga">
-  <img alt="Coverity Scan Build Status"
-       src="https://scan.coverity.com/projects/11229/badge.svg"/>
-</a>
+[![Build Status](https://travis-ci.org/johntfoster/TaDIgA.svg?branch=trilinos)](https://travis-ci.org/johntfoster/TaDIgA)
 
-More details to come...
+This branch contains only the Dockerfile to build Trilinos as needed for TaDIgA.
 

@@ -20,7 +20,6 @@ RUN apt-get -yq install gcc \
                         libyaml-cpp-dev \
                         openssh-server
 
-
 #Build Trilinos
 RUN git clone https://github.com/trilinos/Trilinos.git trilinos; \
     mkdir trilinos/build
@@ -56,21 +55,6 @@ RUN cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/trilinos/ \
 
 WORKDIR /
 RUN rm -rf trilinos
-
-#Build Tadiga
-WORKDIR /
-RUN git clone https://github.com/johntfoster/tadiga.git tadiga; \
-    mkdir /tadiga/build
-
-WORKDIR /tadiga/build/
-RUN cmake \
-    -D CMAKE_BUILD_TYPE:STRING=Release \
-    -D CMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga \
-    -D CMAKE_CXX_FLAGS:STRING="-std=c++14" \
-    -D TRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos \
-    -D CMAKE_CXX_COMPILER:STRING="mpicxx" \
-    ..; \
-    make -j8 && make install
 
 VOLUME /output
 WORKDIR /output
