@@ -52,9 +52,10 @@ RUN cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/trilinos/ \
           -Dyaml-cpp_INCLUDE_DIRS:PATH=/usr/include/yaml-cpp \
           -DTPL_yaml-cpp_LIBRARIES:FILEPATH=/usr/lib/x86_64-linux-gnu/libyaml-cpp.so.0.5 \
           ..; \
-          make -j8 && make install; \
-          cd ..; \
-          rm -rf trilinos
+          make -j8 && make install
+
+WORKDIR /
+RUN rm -rf trilinos
 
 #Build Tadiga
 WORKDIR /
@@ -69,9 +70,7 @@ RUN cmake \
     -D TRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos \
     -D CMAKE_CXX_COMPILER:STRING="mpicxx" \
     ..; \
-    make -j8 && make install && make test; \
-    cd ..; \
-    rm -rf tadiga
+    make -j8 && make install
 
 VOLUME /output
 WORKDIR /output
