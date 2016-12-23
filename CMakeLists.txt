@@ -54,7 +54,6 @@ IF(yaml-cpp_Package_Index GREATER -1)
     ADD_DEFINITIONS(-DUSE_YAML)
 ENDIF()
 
-FIND_PACKAGE(OpenCascade REQUIRED)
 
 
 # Optional Installation helpers
