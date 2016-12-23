@@ -1,4 +1,4 @@
-FROM debian/jessie
+FROM debian:stable-slim
 
 MAINTAINER John Foster <johntfosterjr@gmail.com>
 
@@ -13,6 +13,7 @@ RUN apt-get -yq install gcc \
                         libblas-dev \
                         liblapack-dev \
                         libboost-dev \
+                        python \
                         cmake  \
                         git \
                         libyaml-cpp0.5 \
@@ -32,10 +33,9 @@ RUN cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/trilinos/ \
           -DCMAKE_Fortran_COMPILER:STRING="mpif90" \
           -DTrilinos_ENABLE_ALL_PACKAGES:BOOL=OFF \
           -DTrilinos_ENABLE_ALL_OPTIONAL_PACKAGES:BOOL=OFF \
-          -DTrilinos_ENABLE_ALL_FORWARD_DEP_PACKAGES:BOOL=ON \
+          -DTrilinos_ENABLE_ALL_FORWARD_DEP_PACKAGES:BOOL=OFF \
           -DTrilinos_ENABLE_Teuchos:BOOL=ON \
           -DTrilinos_ENABLE_Tpetra:BOOL=ON \
-          -DTrilinos_ENABLE_SEACAS:BOOL=OFF \
           -DTrilinos_ENABLE_SEACASAprepro=ON \
           -DTPL_ENABLE_MPI:BOOL=ON \
           -DMPI_BASE_DIR:PATH=/usr \
@@ -51,13 +51,15 @@ RUN cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/trilinos/ \
           -DTPL_ENABLE_yaml-cpp:BOOL=ON \
           -Dyaml-cpp_INCLUDE_DIRS:PATH=/usr/include/yaml-cpp \
           -DTPL_yaml-cpp_LIBRARIES:FILEPATH=/usr/lib/x86_64-linux-gnu/libyaml-cpp.so.0.5 \
-          ..
-
-RUN make -j8 && make install
+          ..; \
+          make -j8 && make install; \
+          cd ..; \
+          rm -rf trilinos
 
 #Build Tadiga
-RUN git clone https://github.com/johntfoster/tadiga.git tadiga 
-RUN mkdir /tadiga/build
+WORKDIR /
+RUN git clone https://github.com/johntfoster/tadiga.git tadiga; \
+    mkdir /tadiga/build
 
 WORKDIR /tadiga/build/
 RUN cmake \
@@ -67,7 +69,7 @@ RUN cmake \
     -D TRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos \
     -D CMAKE_CXX_COMPILER:STRING="mpicxx" \
     ..; \
-    make && make install && make test
+    make -j8 && make install && make test; \
     cd ..; \
     rm -rf tadiga
 
