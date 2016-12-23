@@ -8,6 +8,9 @@ services:
 install:
   - docker build -t johntfoster/trilinos:tadiga .
 
+script:
+  - docker ps -a
+
 after_success:
   - if [ "$TRAVIS_BRANCH" == "trilinos" ]; then
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
