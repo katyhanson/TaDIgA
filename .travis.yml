@@ -7,7 +7,6 @@ services:
 
 before_install:
   - docker build -t johntfoster/tadiga .
-  - docker run johntfoster/tadiga /bin/sh -c "cd /tadiga/build; make test"
 
 script:
-  - make test
+  - docker run johntfoster/tadiga /bin/sh -c "cd /tadiga/build; make test"
