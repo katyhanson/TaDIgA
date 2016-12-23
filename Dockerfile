@@ -10,7 +10,7 @@ RUN apt-get -yq install openmpi-bin
 RUN apt-get -yq install openssh-server
 
 #Build Peridigm
-RUN git clone https://github.com/tadiga/tadiga.git tadiga 
+RUN git clone https://github.com/johntfoster/tadiga.git tadiga 
 RUN mkdir /tadiga/build
 
 WORKDIR /tadiga/build/
