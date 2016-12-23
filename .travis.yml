@@ -6,17 +6,18 @@ services:
   - docker
 
 install:
-  - docker build -t johntfoster/tadiga .
+    - docker build -t johntfoster/tadiga:test .
 
 script:
-  - docker run johntfoster/tadiga /bin/sh -c "cd /tadiga/build; make test"
+    - docker run johntfoster/tadiga:test /bin/sh -c "cd /tadiga/build; make test"
 
 after_success:
-  - docker run johntfoster/tadiga /bin/sh -c "rm -rf /tadiga"
-  - docker commit `docker ps -a | awk '/tadiga/{print $1}'` johntfoster/tadiga
+    - docker run johntfoster/tadiga:test /bin/bash -c "rm -rf /tadiga"
+  - CONTAINER_ID=`docker ps -a -n 1 | awk '/tadiga/{print $1}'`
+  - docker commit $CONTAINER_ID johntfoster/tadiga:latest
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push johntfoster/tadiga;
+        docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+        docker push johntfoster/tadiga:latest;
     fi
 
 
