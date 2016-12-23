@@ -22,6 +22,4 @@ RUN cmake \
 WORKDIR /output
 ENV PATH /usr/local/tadiga/bin:$PATH
 
-RUN mkdir /var/run/sshd
-EXPOSE 22
 CMD    ["/usr/sbin/sshd", "-D"]
