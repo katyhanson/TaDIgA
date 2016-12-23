@@ -50,10 +50,11 @@ MESSAGE("")
 
 LIST(FIND Trilinos_TPL_LIST yaml-cpp yaml-cpp_Package_Index)
 IF(yaml-cpp_Package_Index GREATER -1)
-    MESSAGE("-- Trilinos was compiled with TPL_ENABLE_yaml-cpp.\n\n   Will compile TaDIgA to support YAML input files.\n\n")
+    MESSAGE("-- Trilinos was compiled with TPL_ENABLE_yaml-cpp.\n\n   Will compile TaDIgA to support YAML input files. (currently the only option)\n\n")
     ADD_DEFINITIONS(-DUSE_YAML)
-    SET(HAVE_YAML TRUE)
 ENDIF()
+
+FIND_PACKAGE(OpenCascade REQUIRED)
 
 
 # Optional Installation helpers
