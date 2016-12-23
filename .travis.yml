@@ -9,7 +9,8 @@ install:
   - docker build -t johntfoster/trilinos:tadiga .
 
 script:
-  - docker ps -a
+  - docker run -d -t johntfoster/trilinos:tadiga
+  - docker ps
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "trilinos" ]; then
