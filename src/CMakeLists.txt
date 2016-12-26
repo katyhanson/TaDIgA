@@ -29,6 +29,15 @@ set(Tadiga_LINK_LIBRARIES
     ${REQUIRED_LIBS}
 )
 
+# Setup the coveralls target and tell it to gather
+# coverage data for all the lib sources.
+if(COVERALLS)
+	coveralls_setup(
+        "${Tadiga_SOURCES}" 
+        ${COVERALLS_UPLOAD}                 
+        "${PROJECT_SOURCE_DIR}/CMakeModules/coveralls-cmake/cmake")
+endif()
+
 add_executable(tadiga tadiga_main.cc)
 target_link_libraries(tadiga ${Tadiga_LINK_LIBRARIES})
 

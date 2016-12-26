@@ -2,12 +2,17 @@
 # CMakeLists.txt file for Tadiga
 #
 
-Cmake_minimum_required (VERSION 2.6)
+Cmake_minimum_required (VERSION 2.8)
 
 enable_testing ()
 project(TaDIgA)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/cmake-codecov/cmake" ${CMAKE_MODULE_PATH})
+option(COVERALLS "Turn on coveralls support" OFF)
+option(COVERALLS_UPLOAD "Upload the generated coveralls json" ON)
+
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/coveralls-cmake/cmake" ${CMAKE_MODULE_PATH})
+
+
 
 # MPI configuration
 # use the FindMPI module to find a version of MPI
@@ -19,6 +24,8 @@ mark_as_advanced (CLEAR CMAKE_CXX_FLAGS)
 if (NOT CMAKE_CXX_FLAGS)
   set (CMAKE_CXX_FLAGS "-DMPICH_IGNORE_CXX_SEEK" CACHE STRING "Flags used by the compiler during all build types." FORCE)
 endif (NOT CMAKE_CXX_FLAGS)
+
+
 
 
 #
@@ -80,6 +87,12 @@ include_directories(${INCLUDE_DIRS})
 set(REQUIRED_LIBS
   ${Trilinos_TPL_LIBRARIES}
 )
+
+#Turn on coveralls code coverage upload
+if (COVERALLS)
+	include(Coveralls)
+	coveralls_turn_on_coverage()
+endif()
 
 
 add_subdirectory(src)
