@@ -1,3 +1,0 @@
-[submodule "CMakeModules/CMake-codecov"]
-	path = CMakeModules/CMake-codecov
-	url = git://github.com/RWTH-ELP/CMake-codecov.git

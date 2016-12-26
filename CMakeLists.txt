@@ -8,7 +8,6 @@ enable_testing ()
 project(TaDIgA)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/cmake-codecov/cmake" ${CMAKE_MODULE_PATH})
-FIND_PACKAGE(codecov)
 
 # MPI configuration
 # use the FindMPI module to find a version of MPI
