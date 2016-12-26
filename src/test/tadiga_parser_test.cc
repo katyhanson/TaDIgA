@@ -27,6 +27,8 @@ class TestSetup {
    public:
     TestSetup() {}
 
+    ~TestSetup(){};
+
     std::string GetFileName() { return std::to_string(fileno(temp_file_)); }
 
    private:
