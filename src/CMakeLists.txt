@@ -12,12 +12,12 @@ set(Tadiga_HEADERS
 )
 
 set(Tadiga_SOURCES
-    tadiga.cc
-    tadiga_IGES_geometry.cc
-    tadiga_factory.cc
-    tadiga_parser.cc
-    tadiga_geometry.cc
-    tadiga_geometry_factory.cc
+    ${PROJECT_SOURCE_DIR}/src/tadiga.cc
+    ${PROJECT_SOURCE_DIR}/src/tadiga_IGES_geometry.cc
+    ${PROJECT_SOURCE_DIR}/src/tadiga_factory.cc
+    ${PROJECT_SOURCE_DIR}/src/tadiga_parser.cc
+    ${PROJECT_SOURCE_DIR}/src/tadiga_geometry.cc
+    ${PROJECT_SOURCE_DIR}/src/tadiga_geometry_factory.cc
 )
 
 add_library(tadigaLib ${Tadiga_SOURCES})
@@ -33,7 +33,7 @@ set(Tadiga_LINK_LIBRARIES
 # coverage data for all the lib sources.
 if(COVERALLS)
 	coveralls_setup(
-        "${Tadiga_SOURCES}" 
+        "${Tadiga_SOURCES}"
         ${COVERALLS_UPLOAD}                 
         "${PROJECT_SOURCE_DIR}/CMakeModules/coveralls-cmake/cmake")
 endif()
