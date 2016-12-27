@@ -28,17 +28,11 @@ install:
     - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then 
       mkdir ../../build; 
       cd ../../build; 
-      cmake -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -DCMAKE_CXX_FLAGS:STRING='-std=c++11' -DTRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -DCMAKE_CXX_COMPILER:STRING='mpicxx' ..;
+      cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -DCMAKE_CXX_FLAGS:STRING='-std=c++11' -DTRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -DCMAKE_CXX_COMPILER:STRING='mpicxx' -DCOVERALLS:BOOL=ON..;
       make -j8;
       fi
 
-script: if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make test ; fi
-
-after_success:
-    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then 
-      cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -DCMAKE_CXX_FLAGS:STRING='-std=c++11' -DTRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -DCMAKE_CXX_COMPILER:STRING='mpicxx' -DCOVERALLS:BOOL=ON..;
-      make -j8 coveralls
-      fi
+script: if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make coveralls; fi
 
 addons:
   coverity_scan:
