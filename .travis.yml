@@ -15,7 +15,7 @@ env:
      - secure: "dzxl+sy/vc2/hPAL9VfRlS3aa8CY5NZDLRfbx+9lLAYC8qmKWPtZwOyEa9RMx6Od1kHS6oNemNwFNCHiIPkH53031gqTXdMS/qHoZAjhRa1ejBE0L0HePdeJAamuJdFnW83PT+qcSWIwmedcaRYfhoYEn6H2TFF47uuhMGuhWz/SmC4Q9u+h8ocEW2uoCOMdLFLWtGyJDh0B3tvDrk+9pxVoJdBzwDAkHh6zoKBAgBQzCm171FC9XwdEvnmnmd/UudRnCDvKz7NZvCRW0FxE/yrli8UrhtAXJzGdYDkcyp5h4NIT4xkKvYgr/MJPsDluJCmOT63Mpcw5BbPhd0xrTMJx1RBIBPUodF/2tJMIp6INt3b51YRa8FniSjz8ih8woIfY+TtNIkKmsC4Aq3hQhM1HNL22B+YNl1VJ2m8EmllvvjMC0sYOYgzb5SA91qDJVm4qSwHI/QWJKscBdvBKv8PEaNLJyNuRc6URz4ukfjcXUJRepZZ5B6kTJAO/EIAGWuc1slzWJmSkc4EEU8QEyM9tUdxjRA+/73wVaJWzi2G92PfKBiz7+YRwLF1zX3hpQ9IrLltEuKQYXS5dHPuRrrL+deCAZTDiCaqnjbS/KPqDAR2yjhW5idLnuiTduLFaReUz0RmnL/03VFLdSbAziziGn0n1tcOEIHQBc1o9ocA="
 
 before_install:
-    - if [ "${COVERITY_SCAN_BRANCH}" = 1 ]; then 
+    - if [ "$TRAVIS_BRANCH" == "coverity_branch" ]; then 
       echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca- ;
       git fetch origin master ;
       git rebase master ;
@@ -32,14 +32,14 @@ before_install:
     - sudo make install
 
 install:
-    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then 
+    - if [ "$TRAVIS_BRANCH" != "coverity_scan" ]; then 
       mkdir ../../build; 
       cd ../../build; 
       cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -DCMAKE_CXX_FLAGS:STRING='-std=c++11' -DTRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -DCMAKE_CXX_COMPILER:STRING='mpicxx' -DCOVERALLS:BOOL=ON .. ;
       make -j8;
       fi
 
-script: if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make coveralls; fi
+script: if [ "$TRAVIS_BRANCH" != "coverity_scan" ]; then make coveralls; fi
 
 addons:
   coverity_scan:
@@ -52,7 +52,7 @@ addons:
     branch_pattern: coverity_scan
 
 after_success:
-  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then
+  - if [ "$TRAVIS_BRANCH" != "coverity_scan" ]; then
     cd .. ;
     docker build -t johntfoster/tadiga:latest . ;
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" ;
