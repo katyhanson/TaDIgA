@@ -15,19 +15,7 @@ before_install:
     - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
       sudo apt-get update;
-      sudo apt-get -yq install gfortran \
-                               build-essential  \
-                               libopenmpi-dev \ 
-                               openmpi-bin \
-                               libblas-dev \
-                               liblapack-dev \
-                               libboost-dev \
-                               python \
-                               cmake 
-                               git \
-                               libyaml-cpp0.5 \
-                               libyaml-cpp-dev \
-                               openssh-server;
+      sudo apt-get -yq install gfortran build-essential  libopenmpi-dev openmpi-bin libblas-dev liblapack-dev libboost-dev python cmake git libyaml-cpp0.5 libyaml-cpp-dev openssh-server;
       fi
     - git clone https://github.com/trilinos/Trilinos.git trilinos;
     - mkdir trilinos/build
