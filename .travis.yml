@@ -7,6 +7,7 @@ services:
 language: cpp
 compiler: 
     - clang
+    - gcc
 
 env:
   global:
@@ -47,18 +48,14 @@ addons:
       name: "johntfoster/TaDIgA"
       description: "Build submitted via Travis CI"
     notification_email: johntfosterjr@gmail.com
-    build_command_prepend: "mkdir ../../build; cd ../../build; cmake -D CMAKE_BUILD_TYPE:STRING=Release -D CMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -D CMAKE_CXX_FLAGS:STRING='-std=c++11' -D TRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -D CMAKE_CXX_COMPILER:STRING='mpicxx' .."
+    build_command_prepend: "mkdir ../../build; cd ../../build; if [ \"$CXX\" = \"g++\" ]; then cmake -D CMAKE_BUILD_TYPE:STRING=Release -D CMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -D CMAKE_CXX_FLAGS:STRING='-std=c++11' -D TRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -D CMAKE_CXX_COMPILER:STRING='mpicxx' .. ; fi"
     build_command: "make -j8"
     branch_pattern: coverity_scan
 
 after_success:
-  - if [ "$TRAVIS_BRANCH" != "coverity_scan" ]; then
+  - if [ "$TRAVIS_BRANCH" != "coverity_scan" ] && [ "$CXX" == "g++" ]; then
     cd .. ;
     docker build -t johntfoster/tadiga:latest . ;
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" ;
     docker push johntfoster/tadiga:latest ;
-    else
-    git config --global user.email ${GH_EMAIL} ;
-    git config --global user.name ${GH_NAME} ;
-    git push -fq https://${GH_TOKEN}@github.com/johnfoster/TaDIgA.git coverity_scan ;
     fi
