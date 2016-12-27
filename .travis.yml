@@ -9,8 +9,8 @@ os:
     - linux
     - osx
 compiler: 
-    - clang
     - gcc
+    - clang
 
 env:
   global:
