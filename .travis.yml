@@ -49,8 +49,8 @@ addons:
 
 after_success:
   - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then
-    docker build -t johntfoster/tadiga:latest .
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push johntfoster/tadiga:latest;
+    docker build -t johntfoster/tadiga:latest . ;
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" ;
+    docker push johntfoster/tadiga:latest ;
     fi
 
