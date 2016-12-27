@@ -5,6 +5,9 @@ services:
   - docker
 
 language: cpp
+os:
+    - linux
+    - osx
 compiler: 
     - clang
     - gcc
@@ -23,7 +26,10 @@ before_install:
       fi
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
       sudo apt-get update;
-      sudo apt-get -yq install gfortran build-essential  libopenmpi-dev openmpi-bin libblas-dev liblapack-dev libboost-dev python cmake git libyaml-cpp0.5 libyaml-cpp-dev openssh-server;
+      sudo apt-get -yq install gfortran build-essential  libopenmpi-dev openmpi-bin libblas-dev liblapack-dev libboost-dev python cmake git libyaml-cpp0.5 libyaml-cpp-dev;
+      elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
+      brew update;
+      brew install gcc openmpi boost python cmake git libyaml;
       fi
     - git clone https://github.com/trilinos/Trilinos.git trilinos;
     - mkdir trilinos/build
@@ -48,12 +54,12 @@ addons:
       name: "johntfoster/TaDIgA"
       description: "Build submitted via Travis CI"
     notification_email: johntfosterjr@gmail.com
-    build_command_prepend: "mkdir ../../build; cd ../../build; if [ \"$CXX\" = \"g++\" ]; then cmake -D CMAKE_BUILD_TYPE:STRING=Release -D CMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -D CMAKE_CXX_FLAGS:STRING='-std=c++11' -D TRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -D CMAKE_CXX_COMPILER:STRING='mpicxx' .. ; fi"
+    build_command_prepend: "mkdir ../../build; cd ../../build; cmake -D CMAKE_BUILD_TYPE:STRING=Debug -D CMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -D CMAKE_CXX_FLAGS:STRING='-std=c++11' -D TRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -D CMAKE_CXX_COMPILER:STRING='mpicxx' .."
     build_command: "make -j8"
     branch_pattern: coverity_scan
 
 after_success:
-  - if [ "$TRAVIS_BRANCH" != "coverity_scan" ] && [ "$CXX" == "g++" ]; then
+  - if [ "$TRAVIS_BRANCH" != "coverity_scan" ] && [ "$TRAVIS_OS_NAME" = "linux" ] && [ "$CXX" == "g++" ]; then
     cd .. ;
     docker build -t johntfoster/tadiga:latest . ;
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" ;
