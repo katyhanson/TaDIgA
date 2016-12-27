@@ -28,8 +28,9 @@ before_install:
       sudo apt-get update;
       sudo apt-get -yq install gfortran build-essential  libopenmpi-dev openmpi-bin libblas-dev liblapack-dev libboost-dev python cmake git libyaml-cpp0.5 libyaml-cpp-dev;
       elif [ "$TRAVIS_OS_NAME" = "osx" ]; then
-      brew update;
-      brew install gcc openmpi boost python cmake git libyaml;
+      brew update ;
+      brew install gcc openmpi ;
+      brew upgrade boost python cmake git libyaml ;
       fi
     - git clone https://github.com/trilinos/Trilinos.git trilinos;
     - mkdir trilinos/build
