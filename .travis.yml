@@ -15,7 +15,7 @@ env:
      - secure: "dzxl+sy/vc2/hPAL9VfRlS3aa8CY5NZDLRfbx+9lLAYC8qmKWPtZwOyEa9RMx6Od1kHS6oNemNwFNCHiIPkH53031gqTXdMS/qHoZAjhRa1ejBE0L0HePdeJAamuJdFnW83PT+qcSWIwmedcaRYfhoYEn6H2TFF47uuhMGuhWz/SmC4Q9u+h8ocEW2uoCOMdLFLWtGyJDh0B3tvDrk+9pxVoJdBzwDAkHh6zoKBAgBQzCm171FC9XwdEvnmnmd/UudRnCDvKz7NZvCRW0FxE/yrli8UrhtAXJzGdYDkcyp5h4NIT4xkKvYgr/MJPsDluJCmOT63Mpcw5BbPhd0xrTMJx1RBIBPUodF/2tJMIp6INt3b51YRa8FniSjz8ih8woIfY+TtNIkKmsC4Aq3hQhM1HNL22B+YNl1VJ2m8EmllvvjMC0sYOYgzb5SA91qDJVm4qSwHI/QWJKscBdvBKv8PEaNLJyNuRc6URz4ukfjcXUJRepZZ5B6kTJAO/EIAGWuc1slzWJmSkc4EEU8QEyM9tUdxjRA+/73wVaJWzi2G92PfKBiz7+YRwLF1zX3hpQ9IrLltEuKQYXS5dHPuRrrL+deCAZTDiCaqnjbS/KPqDAR2yjhW5idLnuiTduLFaReUz0RmnL/03VFLdSbAziziGn0n1tcOEIHQBc1o9ocA="
 
 before_install:
-    - if [ "$TRAVIS_BRANCH" == "coverity_branch" ]; then 
+    - if [ "$TRAVIS_BRANCH" == "coverity_scan" ]; then 
       echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca- ;
       git fetch origin master ;
       git rebase master ;
@@ -53,9 +53,15 @@ addons:
 
 after_success:
   - if [ "$TRAVIS_BRANCH" != "coverity_scan" ]; then
+    #For builds on succesfull builds on master, ship a docker container
     cd .. ;
     docker build -t johntfoster/tadiga:latest . ;
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" ;
     docker push johntfoster/tadiga:latest ;
+    else
+    #If this is a coverity_scan branch build push the rebased branch back
+    git config --global user.email ${GH_EMAIL}
+    git config --global user.name ${GH_NAME}
+    git push -fq https://${GH_TOKEN}@github.com/johnfoster/TaDIgA.git coverity_scan
     fi
 
