@@ -1,23 +1,63 @@
+dist: trusty
 sudo: required
 
-language: ruby
+language: cpp
+compiler: 
+    - clang
 
-services:
-  - docker
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   # via the "travis encrypt" command using the project repo's public key
+     - secure: "dzxl+sy/vc2/hPAL9VfRlS3aa8CY5NZDLRfbx+9lLAYC8qmKWPtZwOyEa9RMx6Od1kHS6oNemNwFNCHiIPkH53031gqTXdMS/qHoZAjhRa1ejBE0L0HePdeJAamuJdFnW83PT+qcSWIwmedcaRYfhoYEn6H2TFF47uuhMGuhWz/SmC4Q9u+h8ocEW2uoCOMdLFLWtGyJDh0B3tvDrk+9pxVoJdBzwDAkHh6zoKBAgBQzCm171FC9XwdEvnmnmd/UudRnCDvKz7NZvCRW0FxE/yrli8UrhtAXJzGdYDkcyp5h4NIT4xkKvYgr/MJPsDluJCmOT63Mpcw5BbPhd0xrTMJx1RBIBPUodF/2tJMIp6INt3b51YRa8FniSjz8ih8woIfY+TtNIkKmsC4Aq3hQhM1HNL22B+YNl1VJ2m8EmllvvjMC0sYOYgzb5SA91qDJVm4qSwHI/QWJKscBdvBKv8PEaNLJyNuRc6URz4ukfjcXUJRepZZ5B6kTJAO/EIAGWuc1slzWJmSkc4EEU8QEyM9tUdxjRA+/73wVaJWzi2G92PfKBiz7+YRwLF1zX3hpQ9IrLltEuKQYXS5dHPuRrrL+deCAZTDiCaqnjbS/KPqDAR2yjhW5idLnuiTduLFaReUz0RmnL/03VFLdSbAziziGn0n1tcOEIHQBc1o9ocA="
+
+before_install:
+    - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+      sudo apt-get update;
+      sudo apt-get -yq install gfortran \
+                               build-essential  \
+                               libopenmpi-dev \ 
+                               openmpi-bin \
+                               libblas-dev \
+                               liblapack-dev \
+                               libboost-dev \
+                               python \
+                               cmake 
+                               git \
+                               libyaml-cpp0.5 \
+                               libyaml-cpp-dev \
+                               openssh-server;
+      fi
+    - git clone https://github.com/trilinos/Trilinos.git trilinos;
+    - mkdir trilinos/build
+    - cd trilinos/build
+    - cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/trilinos/ -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_FLAGS:STRING="-Wno-unused -std=c++11" -DCMAKE_Fortran_COMPILER:STRING="mpif90" -DTrilinos_ENABLE_ALL_PACKAGES:BOOL=OFF -DTrilinos_ENABLE_ALL_OPTIONAL_PACKAGES:BOOL=OFF -DTrilinos_ENABLE_ALL_FORWARD_DEP_PACKAGES:BOOL=OFF -DTrilinos_ENABLE_Teuchos:BOOL=ON -DTrilinos_ENABLE_Tpetra:BOOL=ON -DTrilinos_ENABLE_SEACASAprepro=ON -DTPL_ENABLE_MPI:BOOL=ON -DMPI_BASE_DIR:PATH=/usr -DTPL_ENABLE_BLAS:BOOL=ON -DTPL_ENABLE_LAPACK:BOOL=ON -DTPL_ENABLE_Boost:BOOL=ON -DTPL_Boost_INCLUDE_DIRS:PATH=/usr/include/boost -DTPL_ENABLE_QT:BOOL=OFF -DTPL_ENABLE_X11:BOOL=OFF -DCMAKE_VERBOSE_MAKEFILE:BOOL=OFF -DTrilinos_VERBOSE_CONFIGURE:BOOL=OFF -DTeuchosCore_ENABLE_yaml-cpp:BOOL=ON -DTPL_ENABLE_yaml-cpp:BOOL=ON -Dyaml-cpp_INCLUDE_DIRS:PATH=/usr/include/yaml-cpp -DTPL_yaml-cpp_LIBRARIES:FILEPATH=/usr/lib/x86_64-linux-gnu/libyaml-cpp.so.0.5 ..
+    - make -j8 
+    - sudo make install
 
 install:
-  - docker build -t johntfoster/tadiga:test .
+    - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then 
+      mkdir ../../build; 
+      cd ../../build; 
+      cmake \
+            -DCMAKE_BUILD_TYPE:STRING=Release \
+            -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga \
+            -DCMAKE_CXX_FLAGS:STRING='-std=c++11' \
+            -DTRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos \
+            -DCMAKE_CXX_COMPILER:STRING='mpicxx' \
+            ..;
+      make -j8;
+      fi
 
-script:
-  - docker run johntfoster/tadiga:test /bin/sh -c "cd /tadiga/build; make test"
+addons:
+  coverity_scan:
+    project:
+      name: "johntfoster/TaDIgA"
+      description: "Build submitted via Travis CI"
+    notification_email: johntfosterjr@gmail.com
+    build_command_prepend: "mkdir ../../build; cd ../../build; cmake -D CMAKE_BUILD_TYPE:STRING=Release -D CMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -D CMAKE_CXX_FLAGS:STRING='-std=c++11' -D TRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -D CMAKE_CXX_COMPILER:STRING='mpicxx' .."
+    build_command: "make -j8"
+    branch_pattern: coverity_scan
 
-after_success:
-  - docker run johntfoster/tadiga:test /bin/bash -c "rm -rf /tadiga"
-  - CONTAINER_ID=`docker ps -a -n 1 | awk '/tadiga/{print $1}'`
-  - docker commit $CONTAINER_ID johntfoster/tadiga:latest
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push johntfoster/tadiga:latest;
-    fi
-
-
+script: if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then make test ; fi
