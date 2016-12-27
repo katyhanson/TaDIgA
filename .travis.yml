@@ -28,13 +28,7 @@ install:
     - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then 
       mkdir ../../build; 
       cd ../../build; 
-      cmake \
-            -DCMAKE_BUILD_TYPE:STRING=Release \
-            -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga \
-            -DCMAKE_CXX_FLAGS:STRING='-std=c++11' \
-            -DTRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos \
-            -DCMAKE_CXX_COMPILER:STRING='mpicxx' \
-            ..;
+      cmake -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -DCMAKE_CXX_FLAGS:STRING='-std=c++11' -DTRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -DCMAKE_CXX_COMPILER:STRING='mpicxx' ..;
       make -j8;
       fi
 
