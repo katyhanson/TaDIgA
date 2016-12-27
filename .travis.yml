@@ -17,8 +17,8 @@ env:
 before_install:
     - if [ "$TRAVIS_BRANCH" == "coverity_scan" ]; then 
       echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca- ;
-      git fetch origin master ;
-      git rebase origin/master ;
+      git fetch https://${GH_TOKEN}@github.com/johnfoster/TaDIgA.git master:master ;
+      git rebase master ;
       fi
     - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
       sudo apt-get update;
