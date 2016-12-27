@@ -19,6 +19,9 @@ RUN cmake \
     ..; \
     make -j8 && make install
 
+WORKDIR /
+RUN rm -rf tadiga
+
 WORKDIR /output
 ENV PATH /usr/local/tadiga/bin:$PATH
 

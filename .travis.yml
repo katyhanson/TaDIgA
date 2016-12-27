@@ -1,6 +1,9 @@
 dist: trusty
 sudo: required
 
+services:
+  - docker
+
 language: cpp
 compiler: 
     - clang
@@ -43,4 +46,11 @@ addons:
     build_command_prepend: "mkdir ../../build; cd ../../build; cmake -D CMAKE_BUILD_TYPE:STRING=Release -D CMAKE_INSTALL_PREFIX:PATH=/usr/local/tadiga -D CMAKE_CXX_FLAGS:STRING='-std=c++11' -D TRILINOS_DIR:PATH=/usr/local/trilinos/lib/cmake/Trilinos -D CMAKE_CXX_COMPILER:STRING='mpicxx' .."
     build_command: "make -j8"
     branch_pattern: coverity_scan
+
+after_success:
+  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then
+    docker build -t johntfoster/tadiga:latest .
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push johntfoster/tadiga:latest;
+    fi
 
