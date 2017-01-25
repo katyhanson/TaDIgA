@@ -20,6 +20,8 @@ class Geometry {
    public:
     Geometry(){};
 
+    void LoadBalanceFaceList();
+
    private:
     //! Private to prohibit copying.
     Geometry(const Geometry &);

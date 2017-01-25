@@ -79,6 +79,7 @@ include(CMakePackageConfigHelpers)
 # include for all directories
 # Collection of include and lib directories
 set(INCLUDE_DIRS 
+${OCC_INCLUDE_DIR}
 ${Trilinos_INCLUDE_DIRS} 
 ${Trilinos_TPL_INCLUDE_DIRS}
 ${CMAKE_SOURCE_DIR}
