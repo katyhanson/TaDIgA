@@ -25,11 +25,11 @@ tadiga::IgesGeometry::IgesGeometry(
     const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters)
     : kComm_(kComm) {
     const auto kFileName =
-        kGeometryParameters->get<Standard_CString>("IGES File");
-
+        kGeometryParameters->get<std::string>("File Name");
+     
     // Open IGES Reader from OpenCASCADE
     const auto kIgesReader = Teuchos::rcp(new IGESControl_Reader);
-    const auto status = kIgesReader->ReadFile(kFileName);
+    const auto status = kIgesReader->ReadFile(Standard_CString(&kFileName));
 
     // TODO(johntfoster@gmail.com): Check the status of the file
 
