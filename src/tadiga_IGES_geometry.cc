@@ -32,13 +32,13 @@ tadiga::IgesGeometry::IgesGeometry(
 
     // TODO(johntfoster@gmail.com): Check the status of the file
 
-    Handle(TColStd_HSequenceOfTransient) myList =
+    Handle(TColStd_HSequenceOfTransient) myFacesList =
         kIgesReader->GiveList("iges-faces");
     // selects all IGES faces in the file and puts them into a list  called
     // //MyList,
 
-    const auto kIgesFaces = myList->Length();
-    const auto kTransFaces = kIgesReader->TransferList(myList);
+    const auto kIgesFaces = myFacesList->Length();
+    const auto kTransFaces = kIgesReader->TransferList(myFacesList);
     // translates MyList,
 
     std::cout << "IGES Faces: " << kIgesFaces
