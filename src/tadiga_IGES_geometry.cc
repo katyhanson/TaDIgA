@@ -15,6 +15,7 @@
 #include "IGESControl_Reader.hxx"
 #include "TColStd_HSequenceOfTransient.hxx"
 #include "TopoDS_Shape.hxx"
+#include "TopoDS_Vertex.hxx"
 
 #include "Teuchos_RCP.hpp"
 
