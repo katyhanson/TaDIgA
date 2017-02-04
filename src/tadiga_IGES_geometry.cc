@@ -16,6 +16,7 @@
 #include "TColStd_HSequenceOfTransient.hxx"
 #include "TopoDS_Shape.hxx"
 #include "TopoDS_Vertex.hxx"
+#include "TopoDS_Edge.hxx"
 
 #include "Teuchos_RCP.hpp"
 
@@ -36,7 +37,7 @@ tadiga::IgesGeometry::IgesGeometry(
     Handle(TColStd_HSequenceOfTransient) myFacesList =
         kIgesReader->GiveList("iges-faces");
     Handle(TColStd_HSequenceOfTransient) myPointsList =
-        kIgesReader->GiveList("iges-type(116)"); 
+        kIgesReader->GiveList("iges-type(110)"); 
 
    
     // selects all IGES faces in the file and puts them into a list  called
