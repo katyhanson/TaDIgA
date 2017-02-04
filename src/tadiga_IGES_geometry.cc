@@ -36,7 +36,7 @@ tadiga::IgesGeometry::IgesGeometry(
     Handle(TColStd_HSequenceOfTransient) myFacesList =
         kIgesReader->GiveList("iges-faces");
     Handle(TColStd_HSequenceOfTransient) myPointsList =
-        kIgesReader->GiveList(iges-type(116)); 
+        kIgesReader->GiveList("iges-type(116)"); 
 
    
     // selects all IGES faces in the file and puts them into a list  called
