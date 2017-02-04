@@ -38,7 +38,10 @@ tadiga::IgesGeometry::IgesGeometry(
         kIgesReader->GiveList("iges-faces");
     Handle(TColStd_HSequenceOfTransient) myEdgesList =
         kIgesReader->GiveList("iges-type(110)"); 
-
+    Handle(TColStd_HSequenceOfTransient) myTabCylinderList =
+        kIgesReader->GiveList("iges-type(122)");
+    Handle(TColStd_HSequenceOfTransient) myCompCurveList =
+        kIgesReader->GiveList("iges-type(102)");
    
     // selects all IGES faces in the file and puts them into a list  called
     // //MyList,
@@ -47,12 +50,18 @@ tadiga::IgesGeometry::IgesGeometry(
     const auto kTransFaces = kIgesReader->TransferList(myFacesList);
     const auto kIgesEdges = myEdgesList->Length();
     const auto kTransEdges = kIgesReader->TransferList(myEdgesList);  
-
-    // translates MyList,
+    const auto kIgesTabCylinder = myTabCylinderList->Length();
+    const auto kTransTabCylinder = kIgesReader->TransferList(myTabCylinderList);   // translates MyList,
+    const auto kIgesCompCurve = myCompCurveList->Length();
+    const auto kTransCompCurve = kIgesReader->TransferList(myCompCurveList);
 
     std::cout << "IGES Faces: " << kIgesFaces
               << "   Transferred:" << kTransFaces << std::endl;
     std::cout << "IGES Edges: " << kIgesEdges
               << "   Transferred:" << kTransEdges << std::endl;
+    std::cout << "IGES Tabulated Cylinder: " << kIgesTabCylinder
+              << "   Transferred:" << kTransTabCylinder << std::endl;
+    std::cout << "IGES Composite Curve: " << kIgesCompCurve
+              << "   Transferred:" << kTransCompCurve << std::endl;
    TopoDS_Shape sh = kIgesReader->OneShape();
 };
