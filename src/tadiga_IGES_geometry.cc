@@ -36,7 +36,7 @@ tadiga::IgesGeometry::IgesGeometry(
 
     Handle(TColStd_HSequenceOfTransient) myFacesList =
         kIgesReader->GiveList("iges-faces");
-    Handle(TColStd_HSequenceOfTransient) myPointsList =
+    Handle(TColStd_HSequenceOfTransient) myEdgesList =
         kIgesReader->GiveList("iges-type(110)"); 
 
    
@@ -45,14 +45,14 @@ tadiga::IgesGeometry::IgesGeometry(
 
     const auto kIgesFaces = myFacesList->Length();
     const auto kTransFaces = kIgesReader->TransferList(myFacesList);
-    const auto kIgesPoints = myPointsList->Length();
-    const auto kTransPoints = kIgesReader->TransferList(myPointsList);  
+    const auto kIgesEdges = myEdgesList->Length();
+    const auto kTransEdges = kIgesReader->TransferList(myEdgesList);  
 
     // translates MyList,
 
     std::cout << "IGES Faces: " << kIgesFaces
               << "   Transferred:" << kTransFaces << std::endl;
-    std::cout << "IGES Points: " << kIgesPoints
-              << "   Transferred:" << kTransPoints << std::endl;
+    std::cout << "IGES Edges: " << kIgesEdges
+              << "   Transferred:" << kTransEdges << std::endl;
    TopoDS_Shape sh = kIgesReader->OneShape();
 };
