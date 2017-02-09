@@ -14,9 +14,9 @@
 //
 #include "IGESControl_Reader.hxx"
 #include "TColStd_HSequenceOfTransient.hxx"
+#include "TopoDS_Edge.hxx"
 #include "TopoDS_Shape.hxx"
 #include "TopoDS_Vertex.hxx"
-#include "TopoDS_Edge.hxx"
 
 #include "Teuchos_RCP.hpp"
 
@@ -37,13 +37,13 @@ tadiga::IgesGeometry::IgesGeometry(
     Handle(TColStd_HSequenceOfTransient) myFacesList =
         kIgesReader->GiveList("iges-faces");
     Handle(TColStd_HSequenceOfTransient) myEdgesList =
-        kIgesReader->GiveList("iges-type(110)"); 
+        kIgesReader->GiveList("iges-type(110)");
     Handle(TColStd_HSequenceOfTransient) myTabCylinderList =
         kIgesReader->GiveList("iges-type(122)");
     Handle(TColStd_HSequenceOfTransient) myCompCurveList =
         kIgesReader->GiveList("iges-type(102)");
     Handle(TColStd_HSequenceOfTransient) myCurveOnSurfaceList =
-        kIgesReader->GiveList("iges-type(142)");   
+        kIgesReader->GiveList("iges-type(142)");
     Handle(TColStd_HSequenceOfTransient) myPointsList =
         kIgesReader->GiveList("iges-type(116)");
 
@@ -53,13 +53,15 @@ tadiga::IgesGeometry::IgesGeometry(
     const auto kIgesFaces = myFacesList->Length();
     const auto kTransFaces = kIgesReader->TransferList(myFacesList);
     const auto kIgesEdges = myEdgesList->Length();
-    const auto kTransEdges = kIgesReader->TransferList(myEdgesList);  
+    const auto kTransEdges = kIgesReader->TransferList(myEdgesList);
     const auto kIgesTabCylinder = myTabCylinderList->Length();
-    const auto kTransTabCylinder = kIgesReader->TransferList(myTabCylinderList);   // translates MyList,
+    const auto kTransTabCylinder =
+        kIgesReader->TransferList(myTabCylinderList);  // translates MyList,
     const auto kIgesCompCurve = myCompCurveList->Length();
     const auto kTransCompCurve = kIgesReader->TransferList(myCompCurveList);
     const auto kIgesCurveOnSurface = myCurveOnSurfaceList->Length();
-    const auto kTransCurveOnSurface = kIgesReader->TransferList(myCurveOnSurfaceList);
+    const auto kTransCurveOnSurface =
+        kIgesReader->TransferList(myCurveOnSurfaceList);
     const auto kIgesPoints = myPointsList->Length();
     const auto kTransPoints = kIgesReader->TransferList(myPointsList);
 
@@ -74,7 +76,7 @@ tadiga::IgesGeometry::IgesGeometry(
     std::cout << "IGES Curve On Surface: " << kIgesCurveOnSurface
               << "   Transferred:" << kTransCurveOnSurface << std::endl;
     std::cout << "IGES Points: " << kIgesPoints
-              << "   Transferred:" << kTransPoints << std::endl;   
+              << "   Transferred:" << kTransPoints << std::endl;
 
-TopoDS_Shape sh = kIgesReader->OneShape();
+    TopoDS_Shape sh = kIgesReader->OneShape();
 };
