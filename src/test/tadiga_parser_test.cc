@@ -25,184 +25,135 @@ namespace tadiga_test {
 
 class TestSetup {
    public:
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+    TestSetup() {}
 
-//    http://www.apache.org/licenses/LICENSE-2.0
+    ~TestSetup() { fclose(temp_file_); };
 
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-#include "IGESControl_Reader.hxx"
-#include "TColStd_HSequenceOfTransient.hxx"
-#include "TopoDS_Edge.hxx"
-#include "TopoDS_Shape.hxx"
-#include "TopoDS_Vertex.hxx"
+    std::string GetFileName() { return std::to_string(fileno(temp_file_)); }
 
-#include "Teuchos_RCP.hpp"
+   private:
+    // Get communicator from test runner
+    Teuchos::RCP<const Teuchos::Comm<int>> kComm_ =
+        Tpetra::DefaultPlatform::getDefaultPlatform().getComm();
 
-#include "tadiga_IGES_geometry.h"
+    // Create temporary file
+    std::FILE* temp_file_ = std::tmpfile();
+};
 
-    tadiga::IgesGeometry::IgesGeometry(
-        const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
-        const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters)
-        : kComm_(kComm) {
-        const auto kFileName =
-            kGeometryParameters->get<std::string>("File Name");
+// Tests the default value of "Verbose" is correctly set to false
+// if an empty parameter list is given as an input to the parser
+TEUCHOS_UNIT_TEST(Parser, Default) {
+    const auto kTestFixture = Teuchos::rcp(new TestSetup());
 
-        // Open IGES Reader from OpenCASCADE
-        const auto kIgesReader = Teuchos::rcp(new IGESControl_Reader);
-        const auto status = kIgesReader->ReadFile(kFileName.c_str());
+    // Retrieve parsed parameter list from file
+    const auto parameters =
+        tadiga::TadigaParser::parse(kTestFixture->GetFileName());
 
-        // TODO(johntfoster@gmail.com): Check the status of the file
+    // Retrieve value of "Verbose"
+    const bool default_verbose_value = parameters->get<bool>("Verbose");
 
-        Handle(TColStd_HSequenceOfTransient) myFacesList =
-            kIgesReader->GiveList("iges-faces");
-        Handle(TColStd_HSequenceOfTransient) myEdgesList =
-            kIgesReader->GiveList("iges-type(110)");
-        Handle(TColStd_HSequenceOfTransient) myTabCylinderList =
-            kIgesReader->GiveList("iges-type(122)");
-        Handle(TColStd_HSequenceOfTransient) myCompCurveList =
-            kIgesReader->GiveList("iges-type(102)");
-        Handle(TColStd_HSequenceOfTransient) myCurveOnSurfaceList =
-            kIgesReader->GiveList("iges-type(142)");
-        Handle(TColStd_HSequenceOfTransient) myPointsList =
-            kIgesReader->GiveList("iges-type(116)");
+    TEST_EQUALITY(default_verbose_value, false)
+}
 
-        // selects all IGES faces in the file and puts them into a list  called
-        TestSetup() {}
+// Tests the value of "Verbose" is true if we first create a parameter list
+// and write it to file
+TEUCHOS_UNIT_TEST(Parser, File) {
+    const auto kTestFixture = Teuchos::rcp(new TestSetup());
 
-        ~TestSetup() { fclose(temp_file_); };
+    auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
 
-        std::string GetFileName() { return std::to_string(fileno(temp_file_)); }
+    parameters->set("Verbose", true);
 
-       private:
-        // Get communicator from test runner
-        Teuchos::RCP<const Teuchos::Comm<int>> kComm_ =
-            Tpetra::DefaultPlatform::getDefaultPlatform().getComm();
+    Teuchos::YAMLParameterList::writeYamlFile(kTestFixture->GetFileName(),
+                                              parameters);
 
-        // Create temporary file
-        std::FILE* temp_file_ = std::tmpfile();
-    };
+    // Reads the parsed parameters
+    parameters = tadiga::TadigaParser::parse(kTestFixture->GetFileName());
 
-    // Tests the default value of "Verbose" is correctly set to false
-    // if an empty parameter list is given as an input to the parser
-    TEUCHOS_UNIT_TEST(Parser, Default) {
-        const auto kTestFixture = Teuchos::rcp(new TestSetup());
+    // Retrieve
+    const bool verbose_value = parameters->get<bool>("Verbose");
 
-        // Retrieve parsed parameter list from file
-        const auto parameters =
-            tadiga::TadigaParser::parse(kTestFixture->GetFileName());
+    TEST_EQUALITY(verbose_value, true)
+}
 
-        // Retrieve value of "Verbose"
-        const bool default_verbose_value = parameters->get<bool>("Verbose");
+// Tests the aprepro algebra functionality for mutiplication
+TEUCHOS_UNIT_TEST(Parser, Double_Multiplication) {
+    const auto kTestFixture = Teuchos::rcp(new TestSetup());
 
-        TEST_EQUALITY(default_verbose_value, false)
-    }
+    auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
 
-    // Tests the value of "Verbose" is true if we first create a parameter list
-    // and write it to file
-    TEUCHOS_UNIT_TEST(Parser, File) {
-        const auto kTestFixture = Teuchos::rcp(new TestSetup());
+    parameters->set("Double Multiply", "{2.2 * 2.0}");
 
-        auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
+    Teuchos::YAMLParameterList::writeYamlFile(kTestFixture->GetFileName(),
+                                              parameters);
 
-        parameters->set("Verbose", true);
+    // Reads the parsed parameters
+    parameters = tadiga::TadigaParser::parse(kTestFixture->GetFileName());
 
-        Teuchos::YAMLParameterList::writeYamlFile(kTestFixture->GetFileName(),
-                                                  parameters);
+    // Retrieve
+    const double double_value = parameters->get<double>("Double Multiply");
 
-        // Reads the parsed parameters
-        parameters = tadiga::TadigaParser::parse(kTestFixture->GetFileName());
+    TEST_FLOATING_EQUALITY(double_value, 4.4, 1e-14)
+}
 
-        // Retrieve
-        const bool verbose_value = parameters->get<bool>("Verbose");
+// Tests the aprepro algebra functionality for predefined constant
+// substitution
+TEUCHOS_UNIT_TEST(Parser, Pi_Value) {
+    const auto kTestFixture = Teuchos::rcp(new TestSetup());
 
-        TEST_EQUALITY(verbose_value, true)
-    }
+    auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
 
-    // Tests the aprepro algebra functionality for mutiplication
-    TEUCHOS_UNIT_TEST(Parser, Double_Multiplication) {
-        const auto kTestFixture = Teuchos::rcp(new TestSetup());
+    parameters->set("Pi", "{PI}");
 
-        auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
+    Teuchos::YAMLParameterList::writeYamlFile(kTestFixture->GetFileName(),
+                                              parameters);
 
-        parameters->set("Double Multiply", "{2.2 * 2.0}");
+    // Reads the parsed parameters
+    parameters = tadiga::TadigaParser::parse(kTestFixture->GetFileName());
 
-        Teuchos::YAMLParameterList::writeYamlFile(kTestFixture->GetFileName(),
-                                                  parameters);
+    // Retrieve
+    const double pi_value = parameters->get<double>("Pi");
 
-        // Reads the parsed parameters
-        parameters = tadiga::TadigaParser::parse(kTestFixture->GetFileName());
+    TEST_FLOATING_EQUALITY(pi_value, 3.1415, 1e-4)
+}
 
-        // Retrieve
-        const double double_value = parameters->get<double>("Double Multiply");
+// Tests the aprepro algebra functionality for function parsing
+TEUCHOS_UNIT_TEST(Parser, Function) {
+    const auto kTestFixture = Teuchos::rcp(new TestSetup());
 
-        TEST_FLOATING_EQUALITY(double_value, 4.4, 1e-14)
-    }
+    auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
 
-    // Tests the aprepro algebra functionality for predefined constant
-    // substitution
-    TEUCHOS_UNIT_TEST(Parser, Pi_Value) {
-        const auto kTestFixture = Teuchos::rcp(new TestSetup());
+    parameters->set("Function", "{4.0 * atan(1.0)}");
 
-        auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
+    Teuchos::YAMLParameterList::writeYamlFile(kTestFixture->GetFileName(),
+                                              parameters);
 
-        parameters->set("Pi", "{PI}");
+    // Reads the parsed parameters
+    parameters = tadiga::TadigaParser::parse(kTestFixture->GetFileName());
 
-        Teuchos::YAMLParameterList::writeYamlFile(kTestFixture->GetFileName(),
-                                                  parameters);
+    // Retrieve
+    const double function_value = parameters->get<double>("Function");
 
-        // Reads the parsed parameters
-        parameters = tadiga::TadigaParser::parse(kTestFixture->GetFileName());
+    TEST_FLOATING_EQUALITY(function_value, 3.1415, 1e-4)
+}
 
-        // Retrieve
-        const double pi_value = parameters->get<double>("Pi");
+// Tests the aprepro algebra functionality for relational operations
+TEUCHOS_UNIT_TEST(Parser, Relational) {
+    const auto kTestFixture = Teuchos::rcp(new TestSetup());
 
-        TEST_FLOATING_EQUALITY(pi_value, 3.1415, 1e-4)
-    }
+    auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
 
-    // Tests the aprepro algebra functionality for function parsing
-    TEUCHOS_UNIT_TEST(Parser, Function) {
-        const auto kTestFixture = Teuchos::rcp(new TestSetup());
+    parameters->set("Relational", "{8 < 10}");
 
-        auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
+    Teuchos::YAMLParameterList::writeYamlFile(kTestFixture->GetFileName(),
+                                              parameters);
 
-        parameters->set("Function", "{4.0 * atan(1.0)}");
+    // Reads the parsed parameters
+    parameters = tadiga::TadigaParser::parse(kTestFixture->GetFileName());
 
-        Teuchos::YAMLParameterList::writeYamlFile(kTestFixture->GetFileName(),
-                                                  parameters);
+    // Retrieve
+    const int int_value = parameters->get<int>("Relational");
 
-        // Reads the parsed parameters
-        parameters = tadiga::TadigaParser::parse(kTestFixture->GetFileName());
-
-        // Retrieve
-        const double function_value = parameters->get<double>("Function");
-
-        TEST_FLOATING_EQUALITY(function_value, 3.1415, 1e-4)
-    }
-
-    // Tests the aprepro algebra functionality for relational operations
-    TEUCHOS_UNIT_TEST(Parser, Relational) {
-        const auto kTestFixture = Teuchos::rcp(new TestSetup());
-
-        auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
-
-        parameters->set("Relational", "{8 < 10}");
-
-        Teuchos::YAMLParameterList::writeYamlFile(kTestFixture->GetFileName(),
-                                                  parameters);
-
-        // Reads the parsed parameters
-        parameters = tadiga::TadigaParser::parse(kTestFixture->GetFileName());
-
-        // Retrieve
-        const int int_value = parameters->get<int>("Relational");
-
-        TEST_EQUALITY(int_value, 1)
-    }
+    TEST_EQUALITY(int_value, 1)
+}
 }
