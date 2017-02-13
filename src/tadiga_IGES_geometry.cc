@@ -52,8 +52,8 @@ tadiga::IgesGeometry::IgesGeometry(
 
     const auto kIgesFaces = myFacesList->Length();
     const auto kTransFaces = kIgesReader->TransferList(myFacesList);
-    const auto kIgesEdges = myEdgesList->Length();
-    const auto kTransEdges = kIgesReader->TransferList(myEdgesList);
+    const auto kIgesEdges = myEdgesList->Length() const auto kTransEdges =
+        kIgesReader->TransferList(myEdgesList);
     const auto kIgesTabCylinder = myTabCylinderList->Length();
     const auto kTransTabCylinder =
         kIgesReader->TransferList(myTabCylinderList);  // translates MyList,
