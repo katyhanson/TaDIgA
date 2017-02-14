@@ -46,8 +46,7 @@ class TestSetup {
     std::FILE* temp_iges_file_ = std::tmpfile();
 };
 
-// TEST_EQUALITY( , )
-TEUCHOS_UNIT_TEST(IGES Geometry, File) {
+TEUCHOS_UNIT_TEST(IGES Geometry, Yaml Type) {
     const auto kTestFixture = Teuchos::rcp(new TestSetup());
 
     auto parameters = Teuchos::RCP(new Teuchos::ParameterList());
@@ -61,6 +60,9 @@ TEUCHOS_UNIT_TEST(IGES Geometry, File) {
                                               parameters);
 
     parameters = tadiga::TadigaParser::parse(kTestFixture->GetYamlFileName(), parameters);
+    const auto yaml_type_value = parameters->get<auto>("Type");
+    TEST_EQUALITY(Type, "IGES");
+    
     // write iges file
     int writeiges() {
         ofstream igesfile;
