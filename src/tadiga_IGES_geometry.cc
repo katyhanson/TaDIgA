@@ -15,6 +15,7 @@
 #include "IGESControl_Reader.hxx"
 #include "TColStd_HSequenceOfTransient.hxx"
 #include "TopoDS_Edge.hxx"
+#include "TopoDS_Face.hxx"
 #include "TopoDS_Shape.hxx"
 #include "TopoDS_Vertex.hxx"
 
@@ -28,11 +29,12 @@ tadiga::IgesGeometry::IgesGeometry(
     : kComm_(kComm) {
     const auto kFileName = kGeometryParameters->get<std::string>("File Name");
 
-    // Open IGES Reader from OpenCASCADE
     const auto kIgesReader = Teuchos::rcp(new IGESControl_Reader);
     const auto status = kIgesReader->ReadFile(kFileName.c_str());
 
     // TODO(johntfoster@gmail.com): Check the status of the file
+    // selects all IGES faces in the file and puts them into a list  called
+    // MyList; Returns list of entities from IGES file
 
     Handle(TColStd_HSequenceOfTransient) myFacesList =
         kIgesReader->GiveList("iges-faces");
@@ -44,39 +46,14 @@ tadiga::IgesGeometry::IgesGeometry(
         kIgesReader->GiveList("iges-type(102)");
     Handle(TColStd_HSequenceOfTransient) myCurveOnSurfaceList =
         kIgesReader->GiveList("iges-type(142)");
-    Handle(TColStd_HSequenceOfTransient) myPointsList =
-        kIgesReader->GiveList("iges-type(116)");
 
-    // selects all IGES faces in the file and puts them into a list  called
-    // //MyList,
-
-    const auto kIgesFaces = myFacesList->Length();
-    const auto kTransFaces = kIgesReader->TransferList(myFacesList);
-    const auto kIgesEdges = myEdgesList->Length();
-    const auto kTransEdges = kIgesReader->TransferList(myEdgesList);
-    const auto kIgesTabCylinder = myTabCylinderList->Length();
-    const auto kTransTabCylinder =
-        kIgesReader->TransferList(myTabCylinderList);  // translates MyList,
-    const auto kIgesCompCurve = myCompCurveList->Length();
-    const auto kTransCompCurve = kIgesReader->TransferList(myCompCurveList);
-    const auto kIgesCurveOnSurface = myCurveOnSurfaceList->Length();
-    const auto kTransCurveOnSurface =
-        kIgesReader->TransferList(myCurveOnSurfaceList);
-    const auto kIgesPoints = myPointsList->Length();
-    const auto kTransPoints = kIgesReader->TransferList(myPointsList);
-
-    std::cout << "IGES Faces: " << kIgesFaces
-              << "   Transferred:" << kTransFaces << std::endl;
-    std::cout << "IGES Edges: " << kIgesEdges
-              << "   Transferred:" << kTransEdges << std::endl;
-    std::cout << "IGES Tabulated Cylinder: " << kIgesTabCylinder
-              << "   Transferred:" << kTransTabCylinder << std::endl;
-    std::cout << "IGES Composite Curve: " << kIgesCompCurve
-              << "   Transferred:" << kTransCompCurve << std::endl;
-    std::cout << "IGES Curve On Surface: " << kIgesCurveOnSurface
-              << "   Transferred:" << kTransCurveOnSurface << std::endl;
-    std::cout << "IGES Points: " << kIgesPoints
-              << "   Transferred:" << kTransPoints << std::endl;
+    this->SetNumberFaces(kIgesReader->TransferList(myFacesList));
+    this->SetNumberLines(kIgesReader->TransferList(myEdgesList));
+    this->SetNumberTabCylinders(kIgesReader->TransferList(myTabCylinderList));
+    this->SetNumberCompCurves(kIgesReader->TransferList(myCompCurveList));
+    this->SetNumberCurveOnSurface(
+        kIgesReader->TransferList(myCurveOnSurfaceList));
 
     TopoDS_Shape sh = kIgesReader->OneShape();
+    // Obtains the results in a single OCCT shape
 };

@@ -13,7 +13,10 @@
 // limitations under the License.
 #ifndef TADIGA_GEOMETRY_H
 #define TADIGA_GEOMETRY_H
-
+#include <TopoDS_Edge.hxx>
+#include <TopoDS_Face.hxx>
+#include <TopoDS_Vertex.hxx>
+#include <TopoDS_Wire.hxx>
 namespace tadiga {
 
 class Geometry {
@@ -22,12 +25,62 @@ class Geometry {
 
     void LoadBalanceFaceList();
 
+    // TopoDS_Shape GetFaces() { return faces_; }
+
+    auto GetNumberFaces() { return nb_face_; }
+    auto SetNumberFaces(int number_of_face) {
+        nb_face_ = number_of_face;
+        return;
+    }
+    auto GetNumberLines() { return nb_line_; }
+    auto SetNumberLines(int number_of_line) {
+        nb_line_ = number_of_line;
+        return;
+    }
+    auto GetNumberTabCylinders() { return nb_tab_cylinder_; }
+    auto SetNumberTabCylinders(int number_of_tab_cylinder) {
+        nb_tab_cylinder_ = number_of_tab_cylinder;
+        return;
+    }
+    auto GetNumberCompCurves() { return nb_comp_curve_; }
+    auto SetNumberCompCurves(int number_of_comp_curve) {
+        nb_comp_curve_ = number_of_comp_curve;
+        return;
+    }
+    auto GetNumberCurveOnSurface() { return nb_curve_on_surface_; }
+    auto SetNumberCurveOnSurface(int number_of_curve_on_surface) {
+        nb_curve_on_surface_ = number_of_curve_on_surface;
+        return;
+    }
+    //  auto GetNumberPoints() { return nb_point_; }
+    // auto SetNumberPoints(int number_of_point) {
+    //    nb_point_ = number_of_point;
+    //   return;
+    // }
+    // auto GetNumberBSplineCurves { return nb_bspline_curve_; }
+    // auto SetNumberBSplineCurves(int number_of_bspline_curve) {
+    // nb_bspline_curve_ = number_of_bspline_curve;
+    // return;
+    //}
+
    private:
     //! Private to prohibit copying.
     Geometry(const Geometry &);
 
     //! Private to prohibit copying.
     Geometry &operator=(const Geometry &);
+
+    int nb_face_;
+    int nb_line_;
+    int nb_tab_cylinder_;
+    int nb_comp_curve_;
+    int nb_curve_on_surface_;
+    int nb_point_;
+    int nb_bspline_curve_;
+
+    TopoDS_Edge lines_;
+    TopoDS_Face faces_;
+    TopoDS_Face tab_cylinders_;
 };
 }
 
