@@ -60,8 +60,6 @@ TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_faces) {
     tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
                                               geometry_parameters);
 
-    // auto number_of_faces = iges_geometry_reader.GetNumberFaces();
-    // std::cout << "Number of faces: " << number_of_faces;
     TEST_EQUALITY(iges_geometry_reader.GetNumberFaces(), 1);
 }
 
@@ -110,7 +108,7 @@ TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_comp_curves) {
     tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
                                               geometry_parameters);
 
-    TEST_EQUALITY(iges_geometry_reader.GetNumberCompCurves(), 1);
+    TEST_EQUALITY(iges_geometry_reader.GetNumberCompositeCurves(), 1);
 }
 
 TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_curve_on_surface) {

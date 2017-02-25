@@ -42,7 +42,7 @@ tadiga::IgesGeometry::IgesGeometry(
         kIgesReader->GiveList("iges-type(110)");
     Handle(TColStd_HSequenceOfTransient) myTabCylinderList =
         kIgesReader->GiveList("iges-type(122)");
-    Handle(TColStd_HSequenceOfTransient) myCompCurveList =
+    Handle(TColStd_HSequenceOfTransient) myCompositeCurveList =
         kIgesReader->GiveList("iges-type(102)");
     Handle(TColStd_HSequenceOfTransient) myCurveOnSurfaceList =
         kIgesReader->GiveList("iges-type(142)");
@@ -50,7 +50,8 @@ tadiga::IgesGeometry::IgesGeometry(
     this->SetNumberFaces(kIgesReader->TransferList(myFacesList));
     this->SetNumberLines(kIgesReader->TransferList(myEdgesList));
     this->SetNumberTabCylinders(kIgesReader->TransferList(myTabCylinderList));
-    this->SetNumberCompCurves(kIgesReader->TransferList(myCompCurveList));
+    this->SetNumberCompositeCurves(
+        kIgesReader->TransferList(myCompositeCurveList));
     this->SetNumberCurveOnSurface(
         kIgesReader->TransferList(myCurveOnSurfaceList));
 

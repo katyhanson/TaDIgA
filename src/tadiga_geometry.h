@@ -25,8 +25,6 @@ class Geometry {
 
     void LoadBalanceFaceList();
 
-    // TopoDS_Shape GetFaces() { return faces_; }
-
     auto GetNumberFaces() { return nb_face_; }
     auto SetNumberFaces(int number_of_face) {
         nb_face_ = number_of_face;
@@ -42,9 +40,9 @@ class Geometry {
         nb_tab_cylinder_ = number_of_tab_cylinder;
         return;
     }
-    auto GetNumberCompCurves() { return nb_comp_curve_; }
-    auto SetNumberCompCurves(int number_of_comp_curve) {
-        nb_comp_curve_ = number_of_comp_curve;
+    auto GetNumberCompositeCurves() { return nb_composite_curve_; }
+    auto SetNumberCompositeCurves(int number_of_composite_curve) {
+        nb_composite_curve_ = number_of_composite_curve;
         return;
     }
     auto GetNumberCurveOnSurface() { return nb_curve_on_surface_; }
@@ -52,35 +50,26 @@ class Geometry {
         nb_curve_on_surface_ = number_of_curve_on_surface;
         return;
     }
-    //  auto GetNumberPoints() { return nb_point_; }
-    // auto SetNumberPoints(int number_of_point) {
-    //    nb_point_ = number_of_point;
-    //   return;
-    // }
-    // auto GetNumberBSplineCurves { return nb_bspline_curve_; }
-    // auto SetNumberBSplineCurves(int number_of_bspline_curve) {
-    // nb_bspline_curve_ = number_of_bspline_curve;
-    // return;
-    //}
 
    private:
     //! Private to prohibit copying.
     Geometry(const Geometry &);
 
-    //! Private to prohibit copying.
     Geometry &operator=(const Geometry &);
 
     int nb_face_;
     int nb_line_;
     int nb_tab_cylinder_;
-    int nb_comp_curve_;
+    int nb_composite_curve_;
     int nb_curve_on_surface_;
     int nb_point_;
     int nb_bspline_curve_;
 
-    TopoDS_Edge lines_;
-    TopoDS_Face faces_;
-    TopoDS_Face tab_cylinders_;
+    TopoDS_Edge line_;
+    TopoDS_Face face_;
+    TopoDS_Face tab_cylinder_;
+    TopoDS_Wire composite_curve_;
+    TopoDS_Wire curve_on_surface_;
 };
 }
 
