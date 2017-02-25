@@ -55,6 +55,6 @@ tadiga::IgesGeometry::IgesGeometry(
     this->SetNumberCurveOnSurface(
         kIgesReader->TransferList(myCurveOnSurfaceList));
 
-    TopoDS_Shape sh = kIgesReader->OneShape();
+    TopoDS_Shape transfered_OCCT_shape = kIgesReader->OneShape();
     // Obtains the results in a single OCCT shape
 };
