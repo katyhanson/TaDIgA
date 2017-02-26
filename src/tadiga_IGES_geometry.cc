@@ -36,22 +36,34 @@ tadiga::IgesGeometry::IgesGeometry(
     // selects all IGES faces in the file and puts them into a list  called
     // MyList; Returns list of entities from IGES file
 
-    Handle(TColStd_HSequenceOfTransient) myFacesList =
+    Handle(TColStd_HSequenceOfTransient) myFaceList =
         kIgesReader->GiveList("iges-faces");
-    Handle(TColStd_HSequenceOfTransient) myEdgesList =
+    Handle(TColStd_HSequenceOfTransient) myLineList =
         kIgesReader->GiveList("iges-type(110)");
-    Handle(TColStd_HSequenceOfTransient) myTabCylinderList =
+    Handle(TColStd_HSequenceOfTransient) myTabulatedCylinderList =
         kIgesReader->GiveList("iges-type(122)");
     Handle(TColStd_HSequenceOfTransient) myCompositeCurveList =
         kIgesReader->GiveList("iges-type(102)");
     Handle(TColStd_HSequenceOfTransient) myCurveOnSurfaceList =
         kIgesReader->GiveList("iges-type(142)");
+    Handle(TColStd_HSequenceOfTransient) myBSplineCurveList =
+        kIgesReader->GiveList("iges-type(126)");
 
-    this->SetNumberFaces(kIgesReader->TransferList(myFacesList));
-    this->SetNumberLines(kIgesReader->TransferList(myEdgesList));
-    this->SetNumberTabCylinders(kIgesReader->TransferList(myTabCylinderList));
+    this->SetNumberIgesFaces(myFaceList->Length());
+    this->SetNumberFaces(kIgesReader->TransferList(myFaceList));
+
+    this->SetNumberIgesLines(myLineList->Length());
+    this->SetNumberLines(kIgesReader->TransferList(myLineList));
+
+    this->SetNumberIgesTabCylinders(myTabulatedCylinderList->Length());
+    this->SetNumberTabulatedCylinders(
+        kIgesReader->TransferList(myTabulatedCylinderList));
+
+    this->SetNumberIgesCompCurves(myCompositeCurveList->Length());
     this->SetNumberCompositeCurves(
         kIgesReader->TransferList(myCompositeCurveList));
+
+    this->SetNumberIgesCurveOnSurface(myCurveOnSurfaceList->Length());
     this->SetNumberCurveOnSurface(
         kIgesReader->TransferList(myCurveOnSurfaceList));
 

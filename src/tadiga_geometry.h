@@ -35,9 +35,9 @@ class Geometry {
         nb_line_ = number_of_line;
         return;
     }
-    auto GetNumberTabCylinders() { return nb_tab_cylinder_; }
-    auto SetNumberTabCylinders(int number_of_tab_cylinder) {
-        nb_tab_cylinder_ = number_of_tab_cylinder;
+    auto GetNumberTabulatedCylinders() { return nb_tabulated_cylinder_; }
+    auto SetNumberTabulatedCylinders(int number_of_tabulated_cylinder) {
+        nb_tabulated_cylinder_ = number_of_tabulated_cylinder;
         return;
     }
     auto GetNumberCompositeCurves() { return nb_composite_curve_; }
@@ -51,15 +51,48 @@ class Geometry {
         return;
     }
 
+    auto GetNumberIgesFaces() { return kIgesFaces_; }
+    auto SetNumberIgesFaces(int kIgesFaces) {
+        kIgesFaces_ = kIgesFaces;
+        return;
+    }
+    auto GetNumberIgesLines() { return kIgesLines_; }
+    auto SetNumberIgesLines(int kIgesLines) {
+        kIgesLines_ = kIgesLines;
+        return;
+    }
+    auto GetNumberIgesTabCylinders() { return kIgesTabulatedCylinders_; }
+    auto SetNumberIgesTabCylinders(int kIgesTabulatedCylinders) {
+        kIgesTabulatedCylinders_ = kIgesTabulatedCylinders;
+        ;
+        return;
+    }
+    auto GetNumberIgesCompCurves() { return kIgesCompositeCurves_; }
+    auto SetNumberIgesCompCurves(int kIgesCompositeCurves) {
+        kIgesCompositeCurves_ = kIgesCompositeCurves;
+        return;
+    }
+    auto GetNumberIgesCurveOnSurface() { return kIgesCurveOnSurface_; }
+    auto SetNumberIgesCurveOnSurface(int kIgesCurveOnSurface) {
+        kIgesCurveOnSurface_ = kIgesCurveOnSurface;
+        return;
+    }
+
    private:
     //! Private to prohibit copying.
     Geometry(const Geometry &);
 
     Geometry &operator=(const Geometry &);
+    int kIgesFaces_;
+    int kIgesLines_;
+    int kIgesTabulatedCylinders_;
+    int kIgesCompositeCurves_;
+    int kIgesCurveOnSurface_;
+    int kIgesBSplineCurve_;
 
     int nb_face_;
     int nb_line_;
-    int nb_tab_cylinder_;
+    int nb_tabulated_cylinder_;
     int nb_composite_curve_;
     int nb_curve_on_surface_;
     int nb_point_;
@@ -67,7 +100,7 @@ class Geometry {
 
     TopoDS_Edge line_;
     TopoDS_Face face_;
-    TopoDS_Face tab_cylinder_;
+    TopoDS_Face tabulated_cylinder_;
     TopoDS_Wire composite_curve_;
     TopoDS_Wire curve_on_surface_;
 };

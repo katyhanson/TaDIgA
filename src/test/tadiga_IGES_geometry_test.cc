@@ -60,7 +60,8 @@ TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_faces) {
     tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
                                               geometry_parameters);
 
-    TEST_EQUALITY(iges_geometry_reader.GetNumberFaces(), 1);
+    TEST_EQUALITY(iges_geometry_reader.GetNumberFaces(),
+                  iges_geometry_reader.GetNumberIgesFaces());
 }
 
 TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_lines) {
@@ -76,7 +77,8 @@ TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_lines) {
     tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
                                               geometry_parameters);
 
-    TEST_EQUALITY(iges_geometry_reader.GetNumberLines(), 5);
+    TEST_EQUALITY(iges_geometry_reader.GetNumberLines(),
+                  iges_geometry_reader.GetNumberIgesLines());
 }
 
 TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_tab_cylinders) {
@@ -92,7 +94,8 @@ TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_tab_cylinders) {
     tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
                                               geometry_parameters);
 
-    TEST_EQUALITY(iges_geometry_reader.GetNumberTabCylinders(), 1);
+    TEST_EQUALITY(iges_geometry_reader.GetNumberTabulatedCylinders(),
+                  iges_geometry_reader.GetNumberIgesTabCylinders());
 }
 
 TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_comp_curves) {
@@ -108,7 +111,8 @@ TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_comp_curves) {
     tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
                                               geometry_parameters);
 
-    TEST_EQUALITY(iges_geometry_reader.GetNumberCompositeCurves(), 1);
+    TEST_EQUALITY(iges_geometry_reader.GetNumberCompositeCurves(),
+                  iges_geometry_reader.GetNumberIgesCompCurves());
 }
 
 TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_curve_on_surface) {
@@ -123,5 +127,7 @@ TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_curve_on_surface) {
 
     tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
                                               geometry_parameters);
+    TEST_EQUALITY(iges_geometry_reader.GetNumberCurveOnSurface(),
+                  iges_geometry_reader.GetNumberIgesCurveOnSurface());
 }
 }
