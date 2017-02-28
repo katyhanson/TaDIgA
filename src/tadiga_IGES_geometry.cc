@@ -49,23 +49,23 @@ tadiga::IgesGeometry::IgesGeometry(
     Handle(TColStd_HSequenceOfTransient) myBSplineCurveList =
         kIgesReader->GiveList("iges-type(126)");
 
-    this->SetNumberIgesFaces(myFaceList->Length());
-    this->SetNumberFaces(kIgesReader->TransferList(myFaceList));
+    number_of_iges_face_ = myFaceList->Length();
+    number_of_transferred_face_ = kIgesReader->TransferList(myFaceList);
 
-    this->SetNumberIgesLines(myLineList->Length());
-    this->SetNumberLines(kIgesReader->TransferList(myLineList));
+    number_of_iges_line_ = myLineList->Length();
+    number_of_transferred_line_ = kIgesReader->TransferList(myLineList);
 
-    this->SetNumberIgesTabCylinders(myTabulatedCylinderList->Length());
-    this->SetNumberTabulatedCylinders(
-        kIgesReader->TransferList(myTabulatedCylinderList));
+    number_of_iges_tabulated_cylinder_ = myTabulatedCylinderList->Length();
+    number_of_transferred_tabulated_cylinder_ =
+        kIgesReader->TransferList(myTabulatedCylinderList);
 
-    this->SetNumberIgesCompCurves(myCompositeCurveList->Length());
-    this->SetNumberCompositeCurves(
-        kIgesReader->TransferList(myCompositeCurveList));
+    number_of_iges_composite_curve_ = myCompositeCurveList->Length();
+    number_of_transferred_composite_curve_ =
+        kIgesReader->TransferList(myCompositeCurveList);
 
-    this->SetNumberIgesCurveOnSurface(myCurveOnSurfaceList->Length());
-    this->SetNumberCurveOnSurface(
-        kIgesReader->TransferList(myCurveOnSurfaceList));
+    number_of_iges_curve_on_surface_ = myCurveOnSurfaceList->Length();
+    number_of_transferred_curve_on_surface_ =
+        kIgesReader->TransferList(myCurveOnSurfaceList);
 
     TopoDS_Shape transfered_OCCT_shape = kIgesReader->OneShape();
     // Obtains the results in a single OCCT shape
