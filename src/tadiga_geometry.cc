@@ -12,3 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include "tadiga_geometry.h"
+
+void tadiga::Geometry::LoadBalanceFaceList(){};
