@@ -46,8 +46,7 @@ class TestSetup {
     // Create temporary file
     std::FILE* temp_file_ = std::tmpfile();
 };
-
-TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_faces) {
+TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_IGES_entities) {
     const auto kTestFixture = Teuchos::rcp(new TestSetup());
 
     auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
@@ -60,74 +59,7 @@ TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_faces) {
     tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
                                               geometry_parameters);
 
-    TEST_EQUALITY(iges_geometry_reader.GetNumberFaces(),
-                  iges_geometry_reader.GetNumberIgesFaces());
-}
-
-TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_lines) {
-    const auto kTestFixture = Teuchos::rcp(new TestSetup());
-
-    auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
-    auto geometry_parameters =
-        Teuchos::rcpFromRef(parameters->sublist("Geometry"));
-
-    geometry_parameters->set("Type", "IGES");
-    geometry_parameters->set("File Name", "test.igs");
-
-    tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
-                                              geometry_parameters);
-
-    TEST_EQUALITY(iges_geometry_reader.GetNumberLines(),
-                  iges_geometry_reader.GetNumberIgesLines());
-}
-
-TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_tab_cylinders) {
-    const auto kTestFixture = Teuchos::rcp(new TestSetup());
-
-    auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
-    auto geometry_parameters =
-        Teuchos::rcpFromRef(parameters->sublist("Geometry"));
-
-    geometry_parameters->set("Type", "IGES");
-    geometry_parameters->set("File Name", "test.igs");
-
-    tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
-                                              geometry_parameters);
-
-    TEST_EQUALITY(iges_geometry_reader.GetNumberTabulatedCylinders(),
-                  iges_geometry_reader.GetNumberIgesTabCylinders());
-}
-
-TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_comp_curves) {
-    const auto kTestFixture = Teuchos::rcp(new TestSetup());
-
-    auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
-    auto geometry_parameters =
-        Teuchos::rcpFromRef(parameters->sublist("Geometry"));
-
-    geometry_parameters->set("Type", "IGES");
-    geometry_parameters->set("File Name", "test.igs");
-
-    tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
-                                              geometry_parameters);
-
-    TEST_EQUALITY(iges_geometry_reader.GetNumberCompositeCurves(),
-                  iges_geometry_reader.GetNumberIgesCompCurves());
-}
-
-TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_curve_on_surface) {
-    const auto kTestFixture = Teuchos::rcp(new TestSetup());
-
-    auto parameters = Teuchos::rcp(new Teuchos::ParameterList());
-    auto geometry_parameters =
-        Teuchos::rcpFromRef(parameters->sublist("Geometry"));
-
-    geometry_parameters->set("Type", "IGES");
-    geometry_parameters->set("File Name", "test.igs");
-
-    tadiga::IgesGeometry iges_geometry_reader(kTestFixture->GetComm(),
-                                              geometry_parameters);
-    TEST_EQUALITY(iges_geometry_reader.GetNumberCurveOnSurface(),
-                  iges_geometry_reader.GetNumberIgesCurveOnSurface());
-}
-}
+    TEST_EQUALITY(iges_geometry_reader.GetNumberIges_Entities(),
+                  iges_geometry_reader.GetNumberTransferred_Entities());
+};
+};

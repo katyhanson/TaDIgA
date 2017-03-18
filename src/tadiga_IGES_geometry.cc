@@ -48,7 +48,7 @@ tadiga::IgesGeometry::IgesGeometry(
 
     // Returns list of all ntities from IGES file
     Handle(TColStd_HSequenceOfTransient) igesEntityList =
-        kIgesReader->GiveList("xst - model - all");
+        kIgesReader->GiveList();
     // Transfer all entities at once
     number_of_iges_entities_ = igesEntityList->Length();
     number_of_transferred_entities_ = kIgesReader->TransferList(igesEntityList);
@@ -104,14 +104,3 @@ tadiga::IgesGeometry::IgesGeometry(
             ExtractedBSplineSurface->VKnotSequence();
     }
 };
-
-// NCollection_Array1 Iteratorr;
-// for (NCollection_Array1 <TheltemType>
-// Iterator::Init(knot_sequence);
-// for (int i = 0; i < knot_sequence.Length(); ++i)
-// cout << knot_sequence[i]<< '\n');
-//  Handle(Ge m_Curve) ExtractedEdgeCurve =
-//  BRep_Tool::Curve(ExtractedEdge);
-// const auto EdgeAnalysis = Teuchos::rcp(new ShapeAnalysis_Edge);
-// Standard Boolean EdgeCurve = EdgeAnalysis.Curve3d();
-// Handle_Geom_Curve Curve = BRep_Tool::Curve(ExtractedEdge);
