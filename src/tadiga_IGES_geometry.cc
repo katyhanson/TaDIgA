@@ -22,19 +22,6 @@
 #include "TopoDS_Shape.hxx"
 #include "TopoDS_Vertex.hxx"
 
-#include "BRepAdaptor_Curve.hxx"
-#include "BRepAdaptor_Surface.hxx"
-#include "BRepBuilderAPI_NurbsConvert.hxx"
-#include "BRep_Tool.hxx"
-#include "BSplCLib.hxx"
-#include "Geom_BSplineCurve.hxx"
-#include "Geom_BSplineSurface.hxx"
-#include "NCollection_Array1.hxx"
-#include "NCollection_List.hxx"
-#include "ShapeAnalysis_Edge.hxx"
-#include "Standard_Real.hxx"
-#include "TopExp_Explorer.hxx"
-
 tadiga::IgesGeometry::IgesGeometry(
     const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
     const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters)

@@ -62,3 +62,4 @@ TEUCHOS_UNIT_TEST(IGES_Geometry, number_of_IGES_entities) {
     TEST_EQUALITY(iges_geometry_reader.GetNumberIges_Entities(),
                   iges_geometry_reader.GetNumberTransferred_Entities());
 };
+};
