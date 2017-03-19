@@ -45,7 +45,6 @@ tadiga::IgesGeometry::IgesGeometry(
     const auto status = kIgesReader->ReadFile(kFileName.c_str());
 
     // TODO(johntfoster@gmail.com): Check the status of the file
-    //
     // Returns list of all ntities from IGES file
     Handle(TColStd_HSequenceOfTransient) igesEntityList =
         kIgesReader->GiveList();
