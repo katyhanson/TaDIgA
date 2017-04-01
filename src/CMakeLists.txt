@@ -18,7 +18,7 @@ set(Tadiga_SOURCES
     ${PROJECT_SOURCE_DIR}/src/tadiga_parser.cc
     ${PROJECT_SOURCE_DIR}/src/tadiga_geometry.cc
     ${PROJECT_SOURCE_DIR}/src/tadiga_geometry_factory.cc
-    ${PROJECT_SOURCE_DIR}/src/tadiga_NURBS_geometry.cc
+    ${PROJECT_SOURCE_DIR}/src/tadiga_geometry.cc
 
 )
 
