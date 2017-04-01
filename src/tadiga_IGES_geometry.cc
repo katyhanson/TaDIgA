@@ -13,24 +13,32 @@
 // limitations under the License.
 //
 #include "tadiga_IGES_geometry.h"
+#include "BRepAdaptor_Curve.hxx"
+#include "BRepAdaptor_Surface.hxx"
+#include "BRepBuilderAPI_NurbsConvert.hxx"
+#include "BRep_Tool.hxx"
+#include "BSplCLib.hxx"
+#include "Geom_BSplineCurve.hxx"
+#include "Geom_BSplineSurface.hxx"
 #include "IGESControl_Reader.hxx"
+#include "ShapeAnalysis_Edge.hxx"
+#include "TColStd_Array1OfReal.hxx"
 #include "TColStd_HSequenceOfTransient.hxx"
 #include "Teuchos_RCP.hpp"
+#include "Teuchos_RCP.hpp"
+#include "TopExp_Explorer.hxx"
 #include "TopoDS.hxx"
-#include "TopoDS_Edge.hxx"
-#include "TopoDS_Face.hxx"
-#include "TopoDS_Shape.hxx"
-#include "TopoDS_Vertex.hxx"
+#include "tadiga_IGES_geometry.h"
+#include "tadiga_geometry.h"
 
 tadiga::IgesGeometry::IgesGeometry(
     const Teuchos::RCP<const Teuchos::Comm<int>>& kComm,
     const Teuchos::RCP<Teuchos::ParameterList>& kGeometryParameters)
-    : kComm_(kComm) {
+    : Geometry(kComm, kGeometryParameters), kComm_(kComm) {
     const auto kFileName = kGeometryParameters->get<std::string>("File Name");
 
     const auto kIgesReader = Teuchos::rcp(new IGESControl_Reader);
     const auto status = kIgesReader->ReadFile(kFileName.c_str());
-
     // TODO(johntfoster@gmail.com): Check the status of the file
     // Returns list of all ntities from IGES file
     Handle(TColStd_HSequenceOfTransient) igesEntityList =
@@ -40,5 +48,7 @@ tadiga::IgesGeometry::IgesGeometry(
     number_of_transferred_entities_ = kIgesReader->TransferList(igesEntityList);
 
     // Obtain result in a single OCCT shape
-    TopoDS_Shape transferred_OCCT_shape = kIgesReader->OneShape();
-};
+    transferred_OCCT_shape_ = kIgesReader->OneShape();
+    // Print output to check status
+    this->initialize();
+}
