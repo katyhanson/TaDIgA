@@ -9,6 +9,7 @@ set(Tadiga_HEADERS
     tadiga_parser.h
     tadiga_geometry.h
     tadiga_geometry_factory.h
+    bsplines.hpp
 )
 
 set(Tadiga_SOURCES
@@ -19,6 +20,8 @@ set(Tadiga_SOURCES
     ${PROJECT_SOURCE_DIR}/src/tadiga_geometry.cc
     ${PROJECT_SOURCE_DIR}/src/tadiga_geometry_factory.cc
     ${PROJECT_SOURCE_DIR}/src/tadiga_geometry.cc
+    ${PROJECT_SOURCE_DIR}/src/bsplines.cpp
+
 
 )
 

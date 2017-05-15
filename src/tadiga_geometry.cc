@@ -1,4 +1,4 @@
-
+// Copyright 2016-2017
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -20,10 +20,14 @@
 #include "BSplCLib.hxx"
 #include "Geom_BSplineCurve.hxx"
 #include "Geom_BSplineSurface.hxx"
+#include "NCollection_Array1.hxx"
 #include "ShapeAnalysis_Edge.hxx"
+#include "TColStd_Array1OfInteger.hxx"
 #include "TColStd_Array1OfReal.hxx"
 #include "Teuchos_RCP.hpp"
 #include "TopExp_Explorer.hxx"
+#include "bsplines.hpp"
+#include "math_Matrix.hxx"
 #include "tadiga_IGES_geometry.h"
 
 tadiga::Geometry::Geometry(
@@ -47,20 +51,56 @@ void tadiga::Geometry::initialize() {
             TopoDS::Edge(ShapeExplorer.Current());
         const auto BRepAdaptorCurve =
             Teuchos::rcp(new BRepAdaptor_Curve(ExtractedEdge));
-        Handle(Geom_BSplineCurve) ExtractedBSplineCurve =
+        Handle(Geom_BSplineCurve) ExtractedBsplineCurve =
             BRepAdaptorCurve->BSpline();
-        int number_of_knots_ = ExtractedBSplineCurve->NbKnots();
-        TColStd_Array1OfReal knot_sequence_ = ExtractedBSplineCurve->Knots();
+        int number_of_knots_ = ExtractedBsplineCurve->NbKnots();
+        TColStd_Array1OfReal knot_sequence_ =
+            ExtractedBsplineCurve->Knots();  // Returns "flat knots", no
+                                             // repeated knot multiplicities
         length_ = knot_sequence_.Length();
-        std::cout << "Length: " << length_ << endl;
+        std::cout << "Knot Sequence Length: " << length_ << endl;
+
+        TColgp_Array1OfPnt bspline_poles_ = ExtractedBsplineCurve->Poles();
+        TColStd_Array1OfInteger multiplicities_ =
+            ExtractedBsplineCurve->Multiplicities();
 
         // Print TColStd_Array1OfReal knot vector to integer array
-        std::cout << "Edge #" << EdgeCounter << " Knot Sequence:";
-        for (int i = 1; i <= length_; i = i + 1) {
+        std::cout << "EDGE #" << EdgeCounter << endl;
+        std::cout << "Knot Sequence:";
+        for (int i = 1; i <= length_; i++) {
             std::cout << " " << knot_sequence_.Value(i);
             knot_sequence_int_[i - 1] = knot_sequence_.Value(i);
         }
         std::cout << endl;
+
+        // EVALUATE BSPLINES FOR EDGES
+        int knotsLen = BSplCLib::KnotsLength(knot_sequence_);
+        TColStd_Array1OfReal knots(1, knotsLen);
+        TColStd_Array1OfInteger mults(1, knotsLen);
+        BSplCLib::Knots(knot_sequence_, knots,
+                        mults);  // Creates flat knot sequence
+
+        if (BSplCLib::KnotForm(knots, 1, knotsLen) == BSplCLib_Uniform) {
+            std::cout << "Knots uniform" << endl;
+        } else {
+            std::cout << "Knots non-uniform" << endl;
+        }
+
+        const double x = 1;  // Evaluation Parameter
+        int Iloc = 0;
+        BSplCLib::Hunt(knot_sequence_, x, Iloc);
+        // Finds knot span location of evaluation parameter
+        std::cout << "Iloc: " << Iloc << endl;
+        int k = 0;  // Derivative Order
+        int p = 1;  // Degree
+        int order = p + 1;
+        int FirstNonZeroIndex = 0;
+        math_Matrix BsplineBasis(1, 1, 1, order, 0);  // Stores results
+        // Evaluation function
+        BSplCLib::EvalBsplineBasis(1, k, order, knot_sequence_, x,
+                                   FirstNonZeroIndex, BsplineBasis);
+        std::cout << "Bspline Evalutation: " << BsplineBasis << endl;
+
         EdgeCounter++;
     }
 
@@ -74,13 +114,13 @@ void tadiga::Geometry::initialize() {
             Teuchos::rcp(new BRepAdaptor_Surface(ExtractedFace));
         Handle(Geom_BSplineSurface) ExtractedBSplineSurface =
             BRepAdaptorSurface->BSpline();
-
+        std::cout << "FACE #" << FaceCounter << endl;
         TColStd_Array1OfReal U_knot_sequence_ =
             ExtractedBSplineSurface->UKnotSequence();
         Ulength_ = U_knot_sequence_.Length();
-        std::cout << "U Length: " << Ulength_ << endl;
-        std::cout << "Face #" << FaceCounter << " U Knot Sequence:";
-        for (int i = 1; i <= Ulength_; i = i + 1) {
+        std::cout << "U Knot Sequence Length: " << Ulength_ << endl;
+        std::cout << " U Knot Sequence:";
+        for (int i = 1; i <= Ulength_; i++) {
             std::cout << " " << U_knot_sequence_.Value(i);
             U_knot_sequence_int_[i - 1] = U_knot_sequence_.Value(i);
         }
@@ -89,9 +129,9 @@ void tadiga::Geometry::initialize() {
         TColStd_Array1OfReal V_knot_sequence_ =
             ExtractedBSplineSurface->VKnotSequence();
         Vlength_ = V_knot_sequence_.Length();
-        std::cout << "V Length: " << Vlength_ << endl;
-        std::cout << "Face #" << FaceCounter << " V Knot Sequence:";
-        for (int i = 1; i <= Vlength_; i = i + 1) {
+        std::cout << "V Knot Sequence Length: " << Vlength_ << endl;
+        std::cout << " V Knot Sequence:";
+        for (int i = 1; i <= Vlength_; i++) {
             std::cout << " " << V_knot_sequence_.Value(i);
             V_knot_sequence_int_[i - 1] = V_knot_sequence_.Value(i);
         }

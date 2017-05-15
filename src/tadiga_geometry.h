@@ -59,6 +59,7 @@ class Geometry {
 
    protected:
     void initialize();
+    void BsplineBasisEval();
     std::array<int, 2> knot_sequence_int_;
     std::array<int, 4> U_knot_sequence_int_;
     std::array<int, 4> V_knot_sequence_int_;
